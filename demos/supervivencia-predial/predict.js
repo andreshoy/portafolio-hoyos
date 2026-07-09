@@ -69,6 +69,12 @@ async function cargarModelo() {
   return res.json();
 }
 
+// comuna ya no se pide en el formulario (es específica de Medellín, no
+// generaliza a otras ciudades); se deja como valor faltante para que el
+// árbol use su dirección por defecto (soporte nativo de XGBoost para
+// missing values), en vez de inventar un valor.
+// pago_inicial y pct_pagado tampoco se piden: se fijan en 0 (sin pago
+// inicial ni abono parcial) en lugar de dejarse como faltantes.
 function leerFormulario() {
   const form = document.getElementById('form-simulador');
   const fd = new FormData(form);
@@ -77,10 +83,9 @@ function leerFormulario() {
     uso: Number(fd.get('uso')),
     estrato: Number(fd.get('estrato')),
     avaluo: Number(fd.get('avaluo')),
-    comuna: Number(fd.get('comuna')),
     monto: Number(fd.get('monto')),
-    pago_inicial: Number(fd.get('pago_inicial')),
-    pct_pagado: Number(fd.get('pct_pagado')),
+    pago_inicial: 0,
+    pct_pagado: 0,
     vigencias_adeudadas: Number(fd.get('vigencias_adeudadas')),
   };
 }
