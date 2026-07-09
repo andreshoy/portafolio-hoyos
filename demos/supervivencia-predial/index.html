@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Simulador de riesgo — cartera vencida de predial — Hoyos Analytics</title>
+  <meta name="description" content="Demo: simulador de riesgo de cartera vencida de predial, con un modelo real de supervivencia (XGBoost AFT) corriendo en el navegador." />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a class="nav-brand" href="/" data-i18n="nav.brand">Hoyos Analytics</a>
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+      <ul class="nav-links">
+        <li><a href="/#servicios" data-i18n="nav.servicios">Servicios</a></li>
+        <li><a href="/#demos" data-i18n="nav.demos">Demos</a></li>
+        <li><a href="/cv/" data-i18n="nav.cv">Hoja de vida</a></li>
+        <li><a href="/#contacto" data-i18n="nav.contacto">Contacto</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="lang-toggle" aria-label="Cambiar idioma">EN</button>
+      </div>
+    </nav>
+  </header>
+
+  <div class="demo-shell">
+    <div class="container">
+      <div class="demo-header">
+        <span class="tag">Modelo predictivo</span>
+        <h1>Simulador de riesgo — cartera vencida de predial</h1>
+        <p>
+          Estima cuánto tiempo tardaría un predio en mora en ponerse al día, usando un
+          modelo de análisis de supervivencia (XGBoost, objetivo AFT).
+        </p>
+      </div>
+
+      <p class="demo-note">
+        Este es el <strong>modelo real</strong> que entrené para un proceso de cartera de
+        predial (500 árboles, XGBoost, objetivo <code>survival:aft</code>) — corre completo
+        en tu navegador, sin backend. Los valores del formulario son <strong>hipotéticos</strong>:
+        no corresponden a ningún predio real, y la unidad de tiempo del modelo (años) es una
+        interpretación razonable ya que el archivo original no trae esa metadata.
+        <br>
+        <em>This is the real model I trained for a property-tax collections process (500
+        trees, XGBoost, <code>survival:aft</code> objective) — it runs entirely in your
+        browser, no backend. Form values are hypothetical, not a real property.</em>
+      </p>
+
+      <p id="cargando-modelo">Cargando modelo (≈1.4 MB)…</p>
+
+      <div class="grid-2">
+        <section class="panel">
+          <h2 class="panel-title">Ficha del modelo</h2>
+          <p class="panel-sub">Estructura real del booster exportado, sin datos de entrenamiento embebidos.</p>
+          <table class="data-table">
+            <tbody>
+              <tr><th>Objetivo</th><td>survival:aft (distribución normal)</td></tr>
+              <tr><th>Árboles</th><td>500</td></tr>
+              <tr><th>Variables</th><td>9 (ver formulario)</td></tr>
+              <tr><th>Motor de inferencia</th><td>JS puro, en el navegador</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">Simulador de riesgo</h2>
+          <p class="panel-sub">Ajusta las variables del predio hipotético y recalcula.</p>
+          <form id="form-simulador" class="d-none-js">
+            <div class="filters-row">
+              <div class="field">
+                <label for="f-vigencia">Vigencia (año)</label>
+                <input type="number" id="f-vigencia" name="vigencia" value="2022" min="2000" max="2026" step="1" />
+              </div>
+              <div class="field">
+                <label for="f-uso">Uso (código 1-6, 9)</label>
+                <input type="number" id="f-uso" name="uso" value="1" min="1" max="9" step="1" />
+              </div>
+              <div class="field">
+                <label for="f-estrato">Estrato</label>
+                <select id="f-estrato" name="estrato">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3" selected>3</option>
+                  <option value="4">4</option>
+                  <option value="5">5</option>
+                  <option value="6">6</option>
+                  <option value="9">9 (no residencial)</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="f-comuna">Comuna</label>
+                <input type="number" id="f-comuna" name="comuna" value="10" min="1" max="22" step="1" />
+              </div>
+            </div>
+            <div class="filters-row">
+              <div class="field">
+                <label for="f-avaluo">Avalúo catastral (COP)</label>
+                <input type="number" id="f-avaluo" name="avaluo" value="120000000" min="0" step="1000000" />
+              </div>
+              <div class="field">
+                <label for="f-monto">Monto adeudado (COP)</label>
+                <input type="number" id="f-monto" name="monto" value="2500000" min="0" step="10000" />
+              </div>
+              <div class="field">
+                <label for="f-pago_inicial">Pago inicial (COP)</label>
+                <input type="number" id="f-pago_inicial" name="pago_inicial" value="0" min="0" step="10000" />
+              </div>
+              <div class="field">
+                <label for="f-pct_pagado">% ya pagado</label>
+                <input type="number" id="f-pct_pagado" name="pct_pagado" value="0" min="0" max="100" step="1" />
+              </div>
+              <div class="field">
+                <label for="f-vigencias_adeudadas">Vigencias adeudadas</label>
+                <input type="number" id="f-vigencias_adeudadas" name="vigencias_adeudadas" value="4" min="1" max="20" step="1" />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Calcular riesgo</button>
+          </form>
+        </section>
+      </div>
+
+      <section class="panel" id="panel-resultado">
+        <div class="kpi-grid">
+          <div class="kpi-tile">
+            <div class="kpi-label">Tiempo mediano estimado al pago</div>
+            <div class="kpi-value" id="kpi-mediana">—</div>
+          </div>
+          <div class="kpi-tile">
+            <div class="kpi-label">Sigue en mora a 2 años</div>
+            <div class="kpi-value" id="kpi-prob-2a">—</div>
+          </div>
+          <div class="kpi-tile">
+            <div class="kpi-label">Sigue en mora a 10 años</div>
+            <div class="kpi-value" id="kpi-prob-10a">—</div>
+          </div>
+          <div class="kpi-tile">
+            <div class="kpi-label">Sigue en mora a 20 años</div>
+            <div class="kpi-value" id="kpi-prob-20a">—</div>
+          </div>
+          <div class="kpi-tile">
+            <div class="kpi-label">Clasificación</div>
+            <div class="kpi-value"><span class="badge" id="badge-riesgo">—</span></div>
+          </div>
+        </div>
+        <h3>Curva de supervivencia (probabilidad de seguir en mora)</h3>
+        <div class="chart-wrap" style="height:340px;"><canvas id="chart-supervivencia"></canvas></div>
+      </section>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; <span data-year></span> Hoyos Analytics. <span data-i18n="footer.rights">Todos los derechos reservados.</span></span>
+      <span data-i18n="footer.built">Sitio construido con HTML, CSS y JS puro.</span>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/i18n.js"></script>
+  <script src="predict.js"></script>
+</body>
+</html>
