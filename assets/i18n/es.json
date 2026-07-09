@@ -1,0 +1,44 @@
+{
+  "nav.brand": "Hoyos Analytics",
+  "nav.inicio": "Inicio",
+  "nav.servicios": "Servicios",
+  "nav.demos": "Demos",
+  "nav.cv": "Hoja de vida",
+  "nav.contacto": "Contacto",
+
+  "footer.rights": "Todos los derechos reservados.",
+  "footer.built": "Sitio construido con HTML, CSS y JS puro.",
+
+  "hero.eyebrow": "Tableros de control y modelos predictivos",
+  "hero.title": "Datos que se convierten en decisiones",
+  "hero.lede": "Diseño tableros de control y modelos predictivos con machine learning para entidades públicas y privadas: control de cartera, seguimiento de rentas y priorización de cobro basada en datos.",
+  "hero.cta.demos": "Ver demos",
+  "hero.cta.contact": "Hablemos de tu proyecto",
+
+  "services.title": "Servicios",
+  "services.lede": "Dos líneas de trabajo que se combinan según lo que necesite tu equipo.",
+  "services.dashboards.title": "Tableros de control",
+  "services.dashboards.desc": "KPIs claros y accionables sobre cartera, recaudo, rentas y cumplimiento, con datos actualizados y visualizaciones pensadas para la toma de decisiones.",
+  "services.ml.title": "Modelos predictivos con ML",
+  "services.ml.desc": "Modelos de riesgo, priorización de cobro y análisis de supervivencia para anticipar comportamientos de pago y mora antes de que ocurran.",
+  "services.search.title": "Buscadores y herramientas de consulta",
+  "services.search.desc": "Aplicaciones de búsqueda y comparación de datos (precios, trámites, información pública) fáciles de usar para cualquier ciudadano o funcionario.",
+
+  "demos.title": "Demos",
+  "demos.lede": "Ejemplos construidos con datos de muestra (dummy) para mostrar el enfoque de trabajo — no corresponden a datos reales de ninguna entidad.",
+  "demos.medicamentos.tag": "Buscador",
+  "demos.medicamentos.title": "Buscador de precios de medicamentos",
+  "demos.medicamentos.desc": "Consulta y compara precios de medicamentos por nombre, laboratorio y presentación.",
+  "demos.kpi.tag": "Tablero de control",
+  "demos.kpi.title": "KPIs de títulos por pagar — Rentas varias",
+  "demos.kpi.desc": "Seguimiento de cartera por cobrar, vencimientos y antigüedad de saldos por dependencia.",
+  "demos.predial.tag": "Modelo predictivo",
+  "demos.predial.title": "Supervivencia de cartera vencida — Predial",
+  "demos.predial.desc": "Modelo de análisis de supervivencia para estimar el tiempo esperado hasta el pago de predios en mora.",
+  "demos.open": "Abrir demo",
+
+  "contact.title": "Contacto",
+  "contact.lede": "¿Tienes un caso de uso en mente? Escríbeme y lo conversamos.",
+  "contact.cta": "Escribir un correo",
+  "contact.cv": "Ver hoja de vida"
+}

@@ -1,0 +1,44 @@
+{
+  "nav.brand": "Hoyos Analytics",
+  "nav.inicio": "Home",
+  "nav.servicios": "Services",
+  "nav.demos": "Demos",
+  "nav.cv": "Resume",
+  "nav.contacto": "Contact",
+
+  "footer.rights": "All rights reserved.",
+  "footer.built": "Built with plain HTML, CSS and JS.",
+
+  "hero.eyebrow": "Dashboards and predictive models",
+  "hero.title": "Data that turns into decisions",
+  "hero.lede": "I design dashboards and machine-learning predictive models for public and private entities: receivables control, revenue tracking, and data-driven collections prioritization.",
+  "hero.cta.demos": "See demos",
+  "hero.cta.contact": "Let's talk about your project",
+
+  "services.title": "Services",
+  "services.lede": "Two lines of work that combine depending on what your team needs.",
+  "services.dashboards.title": "Dashboards",
+  "services.dashboards.desc": "Clear, actionable KPIs on receivables, collections, revenue and compliance, with up-to-date data and visualizations built for decision-making.",
+  "services.ml.title": "ML predictive models",
+  "services.ml.desc": "Risk models, collections prioritization and survival analysis to anticipate payment and default behavior before it happens.",
+  "services.search.title": "Search tools & lookup apps",
+  "services.search.desc": "Search and comparison apps (prices, procedures, public information) that are easy to use for any citizen or public official.",
+
+  "demos.title": "Demos",
+  "demos.lede": "Examples built with sample (dummy) data to show the approach — they do not correspond to any entity's real data.",
+  "demos.medicamentos.tag": "Search tool",
+  "demos.medicamentos.title": "Medicine price finder",
+  "demos.medicamentos.desc": "Look up and compare medicine prices by name, manufacturer and presentation.",
+  "demos.kpi.tag": "Dashboard",
+  "demos.kpi.title": "Accounts receivable KPIs — Miscellaneous revenue",
+  "demos.kpi.desc": "Tracking of outstanding receivables, due dates and aging by department.",
+  "demos.predial.tag": "Predictive model",
+  "demos.predial.title": "Delinquent portfolio survival — Property tax",
+  "demos.predial.desc": "Survival analysis model to estimate expected time-to-payment for delinquent properties.",
+  "demos.open": "Open demo",
+
+  "contact.title": "Contact",
+  "contact.lede": "Have a use case in mind? Reach out and let's talk.",
+  "contact.cta": "Send an email",
+  "contact.cv": "View resume"
+}
