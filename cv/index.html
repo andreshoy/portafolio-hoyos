@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Andrés Felipe Hoyos Martin — Resume</title>
+  <meta name="description" content="Resume of Andrés Felipe Hoyos Martin — Economist & Data Scientist" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="cv-utility-bar">
+  <a href="/" id="back-link">&larr; Back to portfolio</a>
+  <div class="cv-downloads">
+    <a href="/cv/cv-es.pdf" download>PDF (ES)</a>
+    <a href="/cv/cv-en.pdf" download>PDF (EN)</a>
+  </div>
+</div>
+<div class="page">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="site-header">
+    <div class="header-left">
+      <img src="foto.jpg" alt="Andrés Felipe Hoyos Martin" class="header-photo" />
+      <div class="header-name">
+        <h1>Andrés Felipe<br>Hoyos Martin</h1>
+        <p class="title-line" id="title-line">Economist &amp; Data Scientist</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="lang-toggle">
+        <button id="btn-en" class="lang-btn active" onclick="setLang('en')"><img class="flag-icon" src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f1fa-1f1f8.svg" alt="US" /> EN</button>
+        <span class="lang-sep">|</span>
+        <button id="btn-es" class="lang-btn" onclick="setLang('es')"><img class="flag-icon" src="https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f1e8-1f1f4.svg" alt="CO" /> ES</button>
+      </div>
+      <div class="header-contact">
+        <a href="tel:+573136451548"><span class="icon">☎</span> 313 645 15 48</a>
+        <a href="mailto:andreshoyosmartin@gmail.com">
+          <span class="icon">@</span> andreshoyosmartin@gmail.com
+        </a>
+        <a href="https://linkedin.com/in/andres-felipe-hoyos-martin" target="_blank" rel="noopener">
+          <span class="icon">in</span> linkedin.com/in/andres-felipe-hoyos-martin
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar">
+
+    <!-- Technical Skills -->
+    <div class="sidebar-section">
+      <h2 id="section-skills">Technical Skills</h2>
+
+      <div class="skill-group">
+        <div class="skill-group-label" id="sg-programming">Programming</div>
+        <div class="tags">
+          <span class="tag">Python</span>
+          <span class="tag">R</span>
+          <span class="tag">SQL</span>
+          <span class="tag">MATLAB</span>
+          <span class="tag">Stata</span>
+          <span class="tag">SPSS</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-label" id="sg-ml">Machine Learning &amp; Statistics</div>
+        <div class="tags">
+          <span class="tag">Machine Learning</span>
+          <span class="tag">AI Agents</span>
+          <span class="tag">NLP / LLMs</span>
+          <span class="tag">Predictive Analytics</span>
+          <span class="tag">ARIMA</span>
+          <span class="tag">Survival Analysis</span>
+          <span class="tag">Econometrics</span>
+          <span class="tag">Demographic Models</span>
+        </div>
+      </div>
+
+      <div class="skill-group">
+        <div class="skill-group-label" id="sg-data">Data &amp; BI</div>
+        <div class="tags">
+          <span class="tag">PostgreSQL</span>
+          <span class="tag">Office</span>
+          <span class="tag">Web Scraping</span>
+          <span class="tag">Power BI</span>
+          <span class="tag">Git</span>
+          <span class="tag">Satellite Imagery</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Soft Skills -->
+    <div class="sidebar-section">
+      <h2 id="section-soft-skills">Soft Skills</h2>
+      <div class="tags">
+        <span class="tag" id="ss-analytical">Analytical Thinking</span>
+        <span class="tag" id="ss-storytelling">Data Storytelling</span>
+        <span class="tag" id="ss-teaching">Teaching</span>
+        <span class="tag" id="ss-communication">Client Communication</span>
+        <span class="tag" id="ss-adaptability">Adaptability</span>
+        <span class="tag" id="ss-autonomous">Autonomous Work</span>
+      </div>
+    </div>
+
+    <!-- Education -->
+    <div class="sidebar-section">
+      <h2 id="section-education">Education</h2>
+
+      <div class="edu-entry">
+        <div class="edu-year">2017 – 2023</div>
+        <div class="degree" id="phd-degree">Doctoral Studies in Economics (not completed)</div>
+        <div class="institution">Universidad de los Andes · Bogotá, Colombia</div>
+      </div>
+
+      <div class="edu-entry">
+        <div class="edu-year">2013 – 2014</div>
+        <div class="degree" id="edu1-degree">Master in Economics</div>
+        <div class="institution">Universidad Icesi · Cali, Colombia</div>
+      </div>
+
+      <div class="edu-entry">
+        <div class="edu-year">2004 – 2010</div>
+        <div class="degree" id="edu2-degree">B.S. Economics</div>
+        <div class="institution">Universidad del Valle · Cali, Colombia</div>
+      </div>
+    </div>
+
+    <!-- Languages -->
+    <div class="sidebar-section">
+      <h2 id="section-languages">Languages</h2>
+      <div class="lang-item">
+        <span class="lang-name" id="lang-spanish">Spanish</span>
+        <span class="lang-badge" id="lang-native-badge">Native</span>
+      </div>
+      <div class="lang-item">
+        <span class="lang-name" id="lang-english">English</span>
+        <span class="lang-badge">B2 (TOEFL iBT 84/120) </span>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main class="main-content">
+
+    <!-- Profile -->
+    <section class="summary">
+      <h2 class="section-heading" id="section-profile">Profile</h2>
+      <p id="profile-p1">
+        Economist and Data Scientist with a Master's in Economics and 10+ years of experience in
+        statistical modeling, predictive analytics, and econometric methods (time series, panel data,
+        discrete choice, survival analysis), combined with machine learning for prediction and
+        classification. Proficient in Python, R, SQL, and Power BI across the full analytics pipeline.
+        Experienced in building AI agent workflows with LLMs to automate analysis and structure
+        unstructured data. Published researcher (<em>PLoS ONE</em>), with applied work in demand
+        forecasting, fiscal performance, education analytics, and market analysis for public and
+        private clients.
+      </p>
+      <p id="profile-keywords" style="margin-top:0.5em;"><strong>Keywords:</strong> Causal inference · Econometrics · Statistical modeling · Machine learning · Predictive analytics · Python.</p>
+    </section>
+
+    <!-- Professional Experience -->
+    <section>
+      <h2 class="section-heading" id="section-experience">Professional Experience</h2>
+      <div class="timeline">
+
+        <div class="entry">
+          <div class="entry-date"><span class="year-range" id="date-contractor">Oct 2023<br>Present</span></div>
+          <div class="entry-body">
+            <div class="entry-title" id="exp-contractor-title">Independent Data Science Contractor</div>
+            <div class="entry-subtitle" id="exp-contractor-subtitle">Colombia</div>
+            <ul class="entry-list" id="exp-contractor-list">
+              <li><strong>DANE</strong> (Feb 2025 – Oct 2026) — Build and maintain demographic databases in R; estimate ARIMA forecasting models; develop ML-based population projection models.</li>
+              <li><strong>Fondo Mujer</strong> (Dec 2025 – Nov 2026) — Structure and migrate survey databases to SQL; design Power BI performance dashboards; conduct program impact evaluation research.</li>
+              <li><strong>Alcaldía de Cali</strong> (Jun 2024 – Apr 2026) — Develop ML and survival analysis models for property tax default prediction; design Power BI fiscal performance dashboards.</li>
+              <li><strong>Atenea</strong> (Aug 2024 – Jan 2025) — Build ML models to predict and prevent student dropout; manage databases using Python and PostgreSQL.</li>
+              <li><strong>Acueducto de Bogotá</strong> (Oct 2023 – Mar 2024) — Estimate econometric price forecasting models; automate data collection via web scraping.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="entry">
+          <div class="entry-date"><span class="year-range">Jan 2015<br>Jun 2023</span></div>
+          <div class="entry-body">
+            <div class="entry-title" id="exp-academic-title">Researcher &amp; Lecturer</div>
+            <div class="entry-subtitle" id="exp-academic-subtitle">Colombia</div>
+            <ul class="entry-list" id="exp-academic-list">
+              <li><strong>Área Andina</strong> (Aug 2022–Jun 2023) — Lecturer: Econometrics I &amp; II · Macroeconomics · Principles of Economics.</li>
+              <li><strong>Quantil</strong> (Jan 2021–Dec 2022) — Lead predictive analytics projects; build and validate ML models in Python and R; design data pipelines.</li>
+              <li><strong>Uniandes</strong> (Aug 2017–Dec 2022) — Teaching Assistant: Advanced Econometrics · Advanced Game Theory · Short-Term Macroeconomics.</li>
+              <li><strong>UAO</strong> (Sep 2016–Sep 2017) — Source and analyze economic and social databases; estimate panel data and discrete choice models.</li>
+              <li><strong>Icesi</strong> (Jan 2015–Jul 2016) — Lecturer: Microeconomics I &amp; II · Econometrics II · Principles of Economics.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Publications -->
+    <section>
+      <h2 class="section-heading" id="section-publications">Publications &amp; Awards</h2>
+
+      <div class="pub-item">
+        <div class="pub-year">2024</div>
+        <div class="pub-body">
+          <div class="pub-title">
+            <a href="https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0294020" target="_blank" rel="noopener">Police elasticity and optimal deployment</a>
+          </div>
+          <div class="pub-venue">PLoS ONE, 19(3)</div>
+        </div>
+      </div>
+
+      <div class="award-item">
+        <div class="award-year">2014</div>
+        <div class="award-body" id="award1-body">
+          <strong>Scholarship — Master in Economics</strong><br>
+          <span>Universidad Icesi · Cali, Colombia</span>
+        </div>
+      </div>
+
+      <div class="award-item">
+        <div class="award-year">Oct 2008</div>
+        <div class="award-body" id="award2-body">
+          <strong>1st Place — VII National Contest for Papers</strong><br>
+          <span>FENADECO – Banco de la República · Barranquilla, Colombia</span>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+<!-- ===================== LANGUAGE SWITCHER ===================== -->
+<script>
+  const translations = {
+    en: {
+      'title-line':         'Economist &amp; Data Scientist',
+      'section-skills':     'Technical Skills',
+      'sg-programming':     'Programming',
+      'sg-ml':              'Machine Learning &amp; Statistics',
+      'sg-data':            'Data &amp; BI',
+      'sg-office':          'Office',
+      'section-soft-skills': 'Soft Skills',
+      'ss-analytical':      'Analytical Thinking',
+      'ss-storytelling':    'Data Storytelling',
+      'ss-teaching':        'Teaching',
+      'ss-communication':   'Client Communication',
+      'ss-adaptability':    'Adaptability',
+      'ss-autonomous':      'Autonomous Work',
+      'section-education':  'Education',
+      'phd-degree':         'Doctoral Studies in Economics (not completed)',
+      'edu1-degree':        'Master in Economics',
+      'edu1-thesis':        'Thesis: "Measuring and comparing well-being in South American countries using equivalent incomes"',
+      'edu2-degree':        'B.S. Economics',
+      'edu2-thesis':        'Thesis: "Evaluación de medidas de riesgo en un portafolio de acciones"',
+      'section-languages':  'Languages',
+      'lang-spanish':       'Spanish',
+      'lang-english':       'English',
+      'lang-native-badge':  'Native',
+      'section-profile':    'Profile',
+      'profile-p1':         'Economist and Data Scientist with a Master\'s in Economics and 10+ years of experience in statistical modeling, predictive analytics, and econometric methods (time series, panel data, discrete choice, survival analysis), combined with machine learning for prediction and classification. Proficient in Python, R, SQL, and Power BI across the full analytics pipeline. Experienced in building AI agent workflows with LLMs to automate analysis and structure unstructured data. Published researcher (<em>PLoS ONE</em>), with applied work in demand forecasting, fiscal performance, education analytics, and market analysis for public and private clients.',
+      'profile-keywords':   '<strong>Keywords:</strong> Causal inference · Econometrics · Statistical modeling · Machine learning · Predictive analytics · Python.',
+      'section-experience':       'Professional Experience',
+      'date-contractor':          'Oct 2023<br>Present',
+      'exp-contractor-title':     'Independent Data Science Contractor',
+      'exp-contractor-subtitle':  'Colombia',
+      'exp-contractor-list':      '<li><strong>DANE</strong> (Feb 2025 – Oct 2026) — Build and maintain demographic databases in R; estimate ARIMA forecasting models; develop ML-based population projection models.</li><li><strong>Fondo Mujer</strong> (Dec 2025 – Nov 2026) — Structure and migrate survey databases to SQL; design Power BI performance dashboards; conduct program impact evaluation research.</li><li><strong>Alcaldía de Cali</strong> (Jun 2024 – Apr 2026) — Develop ML and survival analysis models for property tax default prediction; design Power BI fiscal performance dashboards.</li><li><strong>Atenea</strong> (Aug 2024 – Jan 2025) — Build ML models to predict and prevent student dropout; manage databases using Python and PostgreSQL.</li><li><strong>Acueducto de Bogotá</strong> (Oct 2023 – Mar 2024) — Estimate econometric price forecasting models; automate data collection via web scraping.</li>',
+      'date-exp5':          'Jan 2021<br>Dec 2022',
+      'exp-academic-title':    'Researcher &amp; Lecturer',
+      'exp-academic-subtitle': 'Colombia',
+      'exp-academic-list':     '<li><strong>Área Andina</strong> (Aug 2022–Jun 2023) — Lecturer: Econometrics I &amp; II · Macroeconomics · Principles of Economics.</li><li><strong>Quantil</strong> (Jan 2021–Dec 2022) — Lead predictive analytics projects; build and validate ML models in Python and R; design data pipelines.</li><li><strong>Uniandes</strong> (Aug 2017–Dec 2022) — Teaching Assistant: Advanced Econometrics · Advanced Game Theory · Short-Term Macroeconomics.</li><li><strong>UAO</strong> (Sep 2016–Sep 2017) — Source and analyze economic and social databases; estimate panel data and discrete choice models.</li><li><strong>Icesi</strong> (Jan 2015–Jul 2016) — Lecturer: Microeconomics I &amp; II · Econometrics II · Principles of Economics.</li>',
+      'section-publications': 'Publications',
+      'section-awards':     'Awards &amp; Honors',
+      'award1-body':        '<strong>Scholarship — Master in Economics</strong><br><span>Universidad Icesi · Cali, Colombia</span>',
+      'award2-body':        '<strong>1st Place — VII National Contest for Papers</strong><br><span>FENADECO – Banco de la República · Barranquilla, Colombia</span>',
+      'back-link':          '&larr; Back to portfolio',
+    },
+    es: {
+      'title-line':         'Economista y Científico de Datos',
+      'section-skills':     'Habilidades Técnicas',
+      'sg-programming':     'Programación',
+      'sg-ml':              'Machine Learning y Estadística',
+      'sg-data':            'Datos Y BI',
+      'sg-office':          'Ofimática',
+      'section-soft-skills': 'Habilidades Blandas',
+      'ss-analytical':      'Pensamiento Analítico',
+      'ss-storytelling':    'Data Storytelling',
+      'ss-teaching':        'Docencia',
+      'ss-communication':   'Comunicación con Clientes',
+      'ss-adaptability':    'Adaptabilidad',
+      'ss-autonomous':      'Trabajo Autónomo',
+      'section-education':  'Educación',
+      'phd-degree':         'Estudios Doctorales en Economía (no concluido)',
+      'edu1-degree':        'Maestría en Economía',
+      'edu1-thesis':        'Tesis: "Medición y comparación del bienestar en países de América del Sur usando ingresos equivalentes"',
+      'edu2-degree':        'Economista',
+      'edu2-thesis':        'Tesis: "Evaluación de medidas de riesgo en un portafolio de acciones"',
+      'section-languages':  'Idiomas',
+      'lang-spanish':       'Español',
+      'lang-english':       'Inglés',
+      'lang-native-badge':  'Nativo',
+      'section-profile':    'Perfil',
+      'profile-p1':         'Economista y Científico de Datos con Maestría en Economía y más de 10 años de experiencia en modelado estadístico, análisis predictivo y métodos econométricos (series de tiempo, datos de panel, elección discreta, análisis de supervivencia), combinados con machine learning para predicción y clasificación. Dominio de Python, R, SQL y Power BI en el ciclo completo de análisis. Experiencia en la construcción de flujos de trabajo con agentes de IA y LLMs para automatizar análisis y estructurar datos no estructurados. Investigador publicado (<em>PLoS ONE</em>), con trabajo aplicado en pronóstico de demanda, desempeño fiscal, analítica educativa y análisis de mercado para clientes públicos y privados.',
+      'profile-keywords':   '<strong>Palabras clave:</strong> Inferencia causal · Econometría · Modelado estadístico · Machine learning · Análisis predictivo · Python.',
+      'section-experience':       'Experiencia Profesional',
+      'date-contractor':          'Oct 2023<br>Presente',
+      'exp-contractor-title':     'Contratista Independiente — Ciencia de Datos',
+      'exp-contractor-subtitle':  'Colombia',
+      'exp-contractor-list':      '<li><strong>DANE</strong> (Feb 2025 – Oct 2026) — Construir y mantener bases de datos demográficas en R; estimar modelos de pronóstico ARIMA; desarrollar modelos de proyección de población con ML.</li><li><strong>Fondo Mujer</strong> (Dic 2025 – Nov 2026) — Estructurar y migrar bases de datos de encuestas a SQL; diseñar dashboards de desempeño en Power BI; realizar investigación de evaluación de impacto de programas.</li><li><strong>Alcaldía de Cali</strong> (Jun 2024 – Abr 2026) — Desarrollar modelos de ML y análisis de supervivencia para predecir el incumplimiento del impuesto predial; diseñar dashboards fiscales en Power BI.</li><li><strong>Atenea</strong> (Ago 2024 – Ene 2025) — Construir modelos de ML para predecir y prevenir la deserción estudiantil; gestionar bases de datos con Python y PostgreSQL.</li><li><strong>Acueducto de Bogotá</strong> (Oct 2023 – Mar 2024) — Estimar modelos econométricos para el pronóstico de precios; automatizar la recolección de datos mediante web scraping.</li>',
+      'exp-academic-title':    'Investigador y Docente',
+      'exp-academic-subtitle': 'Colombia',
+      'exp-academic-list':     '<li><strong>Área Andina</strong> (Ago 2022–Jun 2023) — Docente: Econometría I y II · Macroeconomía · Principios de Economía.</li><li><strong>Quantil</strong> (Ene 2021–Dic 2022) — Liderar proyectos de análisis predictivo; construir y validar modelos de ML en Python y R; diseñar pipelines de datos.</li><li><strong>Uniandes</strong> (Ago 2017–Dic 2022) — Asistente de Docencia: Econometría Avanzada · Teoría de Juegos · Macroeconomía de Corto Plazo.</li><li><strong>UAO</strong> (Sep 2016–Sep 2017) — Recopilar y analizar bases de datos económicas y sociales; estimar modelos de datos de panel y elección discreta.</li><li><strong>Icesi — Docente</strong> (Ene 2015–Jul 2016) — Microeconomía I y II · Econometría II · Principios de Economía.</li>',
+      'section-publications': 'Publicaciones',
+      'section-awards':     'Premios y Distinciones',
+      'award1-body':        '<strong>Beca — Maestría en Economía</strong><br><span>Universidad Icesi · Cali, Colombia</span>',
+      'award2-body':        '<strong>1er Puesto — VII Concurso Nacional de Ponencias</strong><br><span>FENADECO – Banco de la República · Barranquilla, Colombia</span>',
+      'back-link':          '&larr; Volver al portafolio',
+    }
+  };
+
+  function setLang(lang) {
+    const t = translations[lang];
+    for (const id in t) {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = t[id];
+    }
+    document.documentElement.lang = lang;
+    document.title = lang === 'es'
+      ? 'Andrés Felipe Hoyos Martin — Hoja de Vida'
+      : 'Andrés Felipe Hoyos Martin — Resume';
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+  }
+</script>
+
+</body>
+</html>
