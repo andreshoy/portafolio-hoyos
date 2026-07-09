@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buscador de precios de medicamentos — Hoyos Analytics</title>
+  <meta name="description" content="Demo: consulta de precios de medicamentos con datos públicos de SISPRO (Colombia), limitada a 10 medicamentos de muestra." />
+  <script>
+    document.documentElement.setAttribute(
+      'data-bs-theme',
+      window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    );
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    /* Contenedor propio (evita colisión con .container global del sitio) */
+    .container-demo {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+    .card-surface {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+    }
+    .stat-tile .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.25rem;
+    }
+    .stat-tile .stat-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .stat-tile .stat-delta {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 0.15rem;
+    }
+    .stat-tile .stat-delta.up-bad { color: var(--status-critical); }
+    .stat-tile .stat-delta.down-good { color: var(--status-good); }
+    .chart-card h5 { color: var(--text-primary); }
+    .ficha-item .ficha-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+    }
+    .ficha-item .ficha-valor { font-size: 0.92rem; color: var(--text-primary); }
+    .chart-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    #tabla-anual th, #tabla-anual td { font-variant-numeric: tabular-nums; }
+    #panel-mensaje, #panel-carga { color: var(--text-muted); }
+    .demo-note {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a class="nav-brand" href="/" data-i18n="nav.brand">Hoyos Analytics</a>
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+      <ul class="nav-links">
+        <li><a href="/#servicios" data-i18n="nav.servicios">Servicios</a></li>
+        <li><a href="/#demos" data-i18n="nav.demos">Demos</a></li>
+        <li><a href="/cv/" data-i18n="nav.cv">Hoja de vida</a></li>
+        <li><a href="/#contacto" data-i18n="nav.contacto">Contacto</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="lang-toggle" aria-label="Cambiar idioma">EN</button>
+      </div>
+    </nav>
+  </header>
+
+  <div class="demo-shell">
+    <div class="container-demo">
+      <div class="demo-header">
+        <span class="tag">Buscador</span>
+        <h1>Buscador de precios de medicamentos</h1>
+        <p>
+          Consulta el histórico de precios reportados en SISPRO (Colombia) por medicamento y presentación,
+          con KPIs y gráficas de evolución mensual/anual.
+        </p>
+      </div>
+
+      <p class="demo-note">
+        Datos públicos reales del sistema SISPRO, recortados a los <strong>10 medicamentos con historial
+        más completo</strong> para esta demo (el buscador original consulta ~8.600 expedientes). No se
+        muestra información privada ni de ninguna entidad contratante.
+        <br>
+        <em>Real public SISPRO data, limited to the 10 medications with the most complete history for
+        this demo — the original search tool covers ~8,600 records.</em>
+      </p>
+
+      <p id="panel-carga">Cargando catálogo de medicamentos…</p>
+
+      <div id="panel-buscador" class="d-none">
+        <div class="mb-3">
+          <label for="medicamento" class="form-label">Medicamento:</label>
+          <select id="medicamento" class="form-select" style="width: 100%">
+            <option value="">Seleccione un medicamento</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="presentacion" class="form-label">Presentación:</label>
+          <select id="presentacion" class="form-select" style="width: 100%" disabled>
+            <option value="">Seleccione un medicamento primero</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="panel-filtros" class="d-none">
+        <div class="row g-3 mb-3" id="filtros-row">
+          <div class="col-6 col-lg-3">
+            <label class="form-label">Rol actor reportante</label>
+            <select id="filtro-rol" class="form-select" multiple></select>
+          </div>
+          <div class="col-6 col-lg-3">
+            <label class="form-label">Tipo de operación</label>
+            <select id="filtro-operacion" class="form-select" multiple></select>
+          </div>
+          <div class="col-6 col-lg-3">
+            <label class="form-label">Tipo de transacción</label>
+            <select id="filtro-transaccion" class="form-select" multiple></select>
+          </div>
+          <div class="col-6 col-lg-3">
+            <label class="form-label">Unidad de factura</label>
+            <select id="filtro-unidad" class="form-select" multiple></select>
+          </div>
+        </div>
+      </div>
+
+      <div id="panel-ficha" class="d-none mb-4">
+        <div class="card-surface chart-card">
+          <h5>Ficha técnica (CUM vigente — INVIMA)</h5>
+          <div class="row g-2" id="ficha-grid"></div>
+        </div>
+      </div>
+
+      <div id="panel-resultados" class="d-none">
+        <div class="row g-3 mb-4" id="kpi-row">
+          <div class="col-6 col-lg-2">
+            <div class="card-surface stat-tile">
+              <div class="stat-label">Precio promedio</div>
+              <div class="stat-value" id="kpi-precio-promedio">—</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-2">
+            <div class="card-surface stat-tile">
+              <div class="stat-label">Precio mínimo histórico</div>
+              <div class="stat-value" id="kpi-precio-minimo">—</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-2">
+            <div class="card-surface stat-tile">
+              <div class="stat-label">Precio máximo histórico</div>
+              <div class="stat-value" id="kpi-precio-maximo">—</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-2">
+            <div class="card-surface stat-tile">
+              <div class="stat-label">Variación</div>
+              <div class="stat-value" id="kpi-variacion">—</div>
+              <div class="stat-delta" id="kpi-variacion-sub"></div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-2">
+            <div class="card-surface stat-tile">
+              <div class="stat-label">Unidades facturadas</div>
+              <div class="stat-value" id="kpi-unidades">—</div>
+            </div>
+          </div>
+          <div class="col-6 col-lg-2">
+            <div class="card-surface stat-tile">
+              <div class="stat-label">Valor total facturado</div>
+              <div class="stat-value" id="kpi-valor">—</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-12">
+            <div class="card-surface chart-card">
+              <h5>Evolución mensual de precio unitario</h5>
+              <div class="chart-sub">Mes a mes desde octubre de 2019 (antes de esa fecha el dato se reporta anual o trimestral — ver tabla histórica anual)</div>
+              <canvas id="chart-precios" height="90"></canvas>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card-surface chart-card">
+              <h5>Unidades facturadas (mensual)</h5>
+              <canvas id="chart-unidades" height="120"></canvas>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card-surface chart-card">
+              <h5>Valor total facturado (mensual)</h5>
+              <canvas id="chart-valor" height="120"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-surface chart-card mb-4">
+          <h5>Histórico anual</h5>
+          <div class="table-responsive">
+            <table class="table table-sm table-striped mb-0" id="tabla-anual">
+              <thead>
+                <tr>
+                  <th>Año</th>
+                  <th>Precio mínimo</th>
+                  <th>Precio máximo</th>
+                  <th>Unidades facturadas</th>
+                  <th>Valor total facturado</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p id="panel-mensaje" class="d-none">No se encontraron datos para la selección.</p>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; <span data-year></span> Hoyos Analytics. <span data-i18n="footer.rights">Todos los derechos reservados.</span></span>
+      <span data-i18n="footer.built">Sitio construido con HTML, CSS y JS puro.</span>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/i18n.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
