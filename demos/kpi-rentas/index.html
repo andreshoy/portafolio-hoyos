@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Seguimiento de cartera — Hoyos Analytics</title>
+  <meta name="description" content="Demo: tablero de KPIs de seguimiento de cartera y títulos por pagar, con datos ficticios." />
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a class="nav-brand" href="/" data-i18n="nav.brand">Hoyos Analytics</a>
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+      <ul class="nav-links">
+        <li><a href="/#servicios" data-i18n="nav.servicios">Servicios</a></li>
+        <li><a href="/#demos" data-i18n="nav.demos">Demos</a></li>
+        <li><a href="/cv/" data-i18n="nav.cv">Hoja de vida</a></li>
+        <li><a href="/#contacto" data-i18n="nav.contacto">Contacto</a></li>
+      </ul>
+      <div class="nav-actions">
+        <button class="lang-toggle" aria-label="Cambiar idioma">EN</button>
+      </div>
+    </nav>
+  </header>
+
+  <div class="demo-shell">
+    <div class="container">
+      <div class="demo-header">
+        <span class="tag">Tablero de control</span>
+        <h1>Seguimiento de cartera — Títulos por pagar</h1>
+        <p>
+          KPIs de cartera, control de prescripción e inconsistencias de notificación para
+          un proceso de cobro de rentas varias.
+        </p>
+      </div>
+
+      <p class="demo-note">
+        Todos los datos de esta demo son <strong>ficticios</strong> (generados aleatoriamente),
+        pensados para reflejar la estructura de un tablero real de seguimiento de cartera —
+        no corresponden a ninguna entidad.
+        <br>
+        <em>All data in this demo is synthetic, designed to mirror the structure of a real
+        receivables-tracking dashboard — it does not correspond to any entity.</em>
+      </p>
+
+      <p id="cargando">Cargando datos…</p>
+
+      <div id="contenido">
+
+        <section class="panel">
+          <h2 class="panel-title">Indicadores de cartera</h2>
+          <p class="panel-sub">Actualizado al <span id="fecha-actualizacion">—</span> · <span id="total-titulos-sub">—</span> títulos</p>
+          <div class="kpi-grid" id="kpi-cartera"></div>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title">Control de prescripción</h2>
+          <p class="panel-sub">
+            Cálculo: última fecha entre ejecutoria, citación, notificación personal, noticorreo y
+            publicación, más 5 años. Se excluyen títulos pagados o con convenio de pago activo.
+          </p>
+          <div class="kpi-grid" id="kpi-prescripcion"></div>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title" style="margin-bottom:16px;">Inconsistencias de notificación</h2>
+          <div class="kpi-grid" id="kpi-inconsistencias"></div>
+        </section>
+
+        <section class="panel">
+          <h3 style="margin-top:0;">Distribución por estado del título</h3>
+          <div class="chart-wrap" style="height:340px;"><canvas id="chart-estado"></canvas></div>
+        </section>
+
+        <section class="panel">
+          <h3 style="margin-top:0;">Análisis de riesgo de prescripción</h3>
+          <div class="chart-wrap" style="height:320px;"><canvas id="chart-riesgo"></canvas></div>
+        </section>
+
+        <div class="grid-2">
+          <section class="panel">
+            <h3 style="margin-top:0;">Títulos por dependencia</h3>
+            <div class="chart-wrap" style="height:340px;"><canvas id="chart-dependencia"></canvas></div>
+          </section>
+          <section class="panel">
+            <h3 style="margin-top:0;">Títulos por concepto de renta</h3>
+            <div class="chart-wrap" style="height:340px;"><canvas id="chart-concepto"></canvas></div>
+          </section>
+        </div>
+
+        <div class="grid-2">
+          <section class="panel">
+            <h3 style="margin-top:0;">Títulos trasladados por año</h3>
+            <div class="chart-wrap" style="height:280px;"><canvas id="chart-anno-cantidad"></canvas></div>
+          </section>
+          <section class="panel">
+            <h3 style="margin-top:0;">Valor trasladado por año</h3>
+            <div class="chart-wrap" style="height:280px;"><canvas id="chart-anno-valor"></canvas></div>
+          </section>
+        </div>
+
+        <section class="panel">
+          <h3 style="margin-top:0;">Indicadores de proceso — con / sin</h3>
+          <div class="chart-wrap" style="height:320px;"><canvas id="chart-indicadores"></canvas></div>
+        </section>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; <span data-year></span> Hoyos Analytics. <span data-i18n="footer.rights">Todos los derechos reservados.</span></span>
+      <span data-i18n="footer.built">Sitio construido con HTML, CSS y JS puro.</span>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/i18n.js"></script>
+  <script src="dashboard.js"></script>
+</body>
+</html>

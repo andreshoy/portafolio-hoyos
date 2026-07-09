@@ -1,0 +1,273 @@
+{
+  "actualizacion": "2026-07-09",
+  "total_registros": 6000,
+  "kpis": {
+    "total_titulos": 6000,
+    "valor_total_cartera": 36502600000.0,
+    "valor_pagado": 4271708000.0,
+    "valor_pendiente": 32230892000.0,
+    "pct_recaudo": 11.7,
+    "titulos_prescritos": 1549,
+    "titulos_riesgo_critico": 230,
+    "titulos_riesgo_alto": 258,
+    "titulos_sin_fecha_interrupcion": 20,
+    "sin_ejecutoria": 130,
+    "titulos_con_mp": 4305,
+    "valor_mandamiento": 25937297000.0,
+    "titulos_con_citacion": 3282,
+    "titulos_con_roc": 1865,
+    "titulos_con_sae": 1301,
+    "titulos_con_embargo": 959,
+    "titulos_con_convenio": 586,
+    "mp_sin_notificacion": 1198,
+    "inc_notificacion_personal": 261,
+    "inc_notificacion_correo": 282
+  },
+  "porEstado": [
+    {
+      "estado": "EXIGIBLE",
+      "cantidad": 2621,
+      "valor_total": 16016632000.0
+    },
+    {
+      "estado": "EN COBRO",
+      "cantidad": 1053,
+      "valor_total": 6295020000.0
+    },
+    {
+      "estado": "TERMINADO",
+      "cantidad": 728,
+      "valor_total": 4571116000.0
+    },
+    {
+      "estado": "EXIGIBLE-NUEVOS",
+      "cantidad": 565,
+      "valor_total": 3380210000.0
+    },
+    {
+      "estado": "ARCHIVADO",
+      "cantidad": 554,
+      "valor_total": 3238317000.0
+    },
+    {
+      "estado": "SUSPENDIDO",
+      "cantidad": 479,
+      "valor_total": 3001305000.0
+    }
+  ],
+  "porDependencia": [
+    {
+      "dependencia": "Dirección de Espacio Público",
+      "cantidad": 555,
+      "valor_total": 3394877000.0
+    },
+    {
+      "dependencia": "Dirección de Impuestos",
+      "cantidad": 567,
+      "valor_total": 3324564000.0
+    },
+    {
+      "dependencia": "Secretaría de Planeación",
+      "cantidad": 592,
+      "valor_total": 3737498000.0
+    },
+    {
+      "dependencia": "Dirección de Ejecuciones Fiscales",
+      "cantidad": 598,
+      "valor_total": 3408792000.0
+    },
+    {
+      "dependencia": "Dirección de Rentas",
+      "cantidad": 606,
+      "valor_total": 3589139000.0
+    },
+    {
+      "dependencia": "Secretaría de Hacienda",
+      "cantidad": 607,
+      "valor_total": 3709772000.0
+    },
+    {
+      "dependencia": "Secretaría de Movilidad",
+      "cantidad": 610,
+      "valor_total": 3625703000.0
+    },
+    {
+      "dependencia": "Secretaría de Infraestructura",
+      "cantidad": 615,
+      "valor_total": 3918869000.0
+    },
+    {
+      "dependencia": "Secretaría de Gobierno",
+      "cantidad": 621,
+      "valor_total": 3937307000.0
+    },
+    {
+      "dependencia": "Secretaría de Salud",
+      "cantidad": 629,
+      "valor_total": 3856079000.0
+    }
+  ],
+  "porConcepto": [
+    {
+      "concepto": "Impuesto de Avisos y Tableros",
+      "cantidad": 291,
+      "valor_total": 1792429000.0
+    },
+    {
+      "concepto": "Otros conceptos",
+      "cantidad": 292,
+      "valor_total": 1833023000.0
+    },
+    {
+      "concepto": "Impuesto de Delineación Urbana",
+      "cantidad": 380,
+      "valor_total": 2419970000.0
+    },
+    {
+      "concepto": "Estampillas",
+      "cantidad": 423,
+      "valor_total": 2508630000.0
+    },
+    {
+      "concepto": "Contribución de Valorización",
+      "cantidad": 436,
+      "valor_total": 2540246000.0
+    },
+    {
+      "concepto": "Sobretasa a la Gasolina",
+      "cantidad": 504,
+      "valor_total": 3193634000.0
+    },
+    {
+      "concepto": "Multas de Tránsito",
+      "cantidad": 941,
+      "valor_total": 5836268000.0
+    },
+    {
+      "concepto": "Impuesto de Industria y Comercio",
+      "cantidad": 1274,
+      "valor_total": 7519334000.0
+    },
+    {
+      "concepto": "Impuesto Predial Unificado",
+      "cantidad": 1459,
+      "valor_total": 8859066000.0
+    }
+  ],
+  "porAnno": [
+    {
+      "anno": 2016,
+      "cantidad": 268,
+      "valor_total": 1611934000.0,
+      "valor_pagado": 159189000.0
+    },
+    {
+      "anno": 2017,
+      "cantidad": 327,
+      "valor_total": 1978819000.0,
+      "valor_pagado": 184957000.0
+    },
+    {
+      "anno": 2018,
+      "cantidad": 398,
+      "valor_total": 2501358000.0,
+      "valor_pagado": 203752000.0
+    },
+    {
+      "anno": 2019,
+      "cantidad": 457,
+      "valor_total": 2892892000.0,
+      "valor_pagado": 362253000.0
+    },
+    {
+      "anno": 2020,
+      "cantidad": 551,
+      "valor_total": 3447264000.0,
+      "valor_pagado": 417073000.0
+    },
+    {
+      "anno": 2021,
+      "cantidad": 646,
+      "valor_total": 3713149000.0,
+      "valor_pagado": 414256000.0
+    },
+    {
+      "anno": 2022,
+      "cantidad": 732,
+      "valor_total": 4410739000.0,
+      "valor_pagado": 626444000.0
+    },
+    {
+      "anno": 2023,
+      "cantidad": 825,
+      "valor_total": 4918493000.0,
+      "valor_pagado": 540723000.0
+    },
+    {
+      "anno": 2024,
+      "cantidad": 887,
+      "valor_total": 5378954000.0,
+      "valor_pagado": 627400000.0
+    },
+    {
+      "anno": 2025,
+      "cantidad": 909,
+      "valor_total": 5648998000.0,
+      "valor_pagado": 735661000.0
+    }
+  ],
+  "indicadores": [
+    {
+      "indicador": "Mandamiento de Pago",
+      "con_indicador": 4305,
+      "sin_indicador": 1695
+    },
+    {
+      "indicador": "Citación",
+      "con_indicador": 3282,
+      "sin_indicador": 2718
+    },
+    {
+      "indicador": "Resolución de Cobro (ROC)",
+      "con_indicador": 1865,
+      "sin_indicador": 4135
+    },
+    {
+      "indicador": "SAE",
+      "con_indicador": 1301,
+      "sin_indicador": 4699
+    },
+    {
+      "indicador": "Embargo",
+      "con_indicador": 959,
+      "sin_indicador": 5041
+    }
+  ],
+  "riesgoPrescripcion": [
+    {
+      "categoria": "Prescritos",
+      "cantidad": 1549,
+      "descripcion": "Superaron los 5 años"
+    },
+    {
+      "categoria": "Riesgo crítico (<6 meses)",
+      "cantidad": 230,
+      "descripcion": "Prescriben antes de 6 meses"
+    },
+    {
+      "categoria": "Riesgo alto (6-12 meses)",
+      "cantidad": 258,
+      "descripcion": "Prescriben entre 6 y 12 meses"
+    },
+    {
+      "categoria": "Sin fecha de interrupción",
+      "cantidad": 20,
+      "descripcion": "No se puede calcular la prescripción"
+    },
+    {
+      "categoria": "Con pago o convenio",
+      "cantidad": 1582,
+      "descripcion": "Prescripción suspendida o extinguida"
+    }
+  ]
+}
