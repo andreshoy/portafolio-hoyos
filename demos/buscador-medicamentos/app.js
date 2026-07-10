@@ -2,30 +2,143 @@
 // gráficas, pero el dropdown de medicamento se limita a los 10 incluidos
 // en data/diccionario.json (sin búsqueda por texto vía ajax).
 
-// Mapeo código -> texto de los 4 filtros. Fijo y chico, va hardcodeado.
-var CODIGOS = {
-    rol: {
-        '1': '1. Elabora o importa el medicamento',
-        '2': '2. Actor que no elabora ni importa el medicamento'
+// Mapeo código -> texto de los 4 filtros, en ambos idiomas. Fijo y chico, va hardcodeado.
+var CODIGOS_POR_IDIOMA = {
+    es: {
+        rol: {
+            '1': '1. Elabora o importa el medicamento',
+            '2': '2. Actor que no elabora ni importa el medicamento'
+        },
+        operacion: {
+            'CM': 'Operacion de compra',
+            'VN': 'Operacion de venta',
+            'RC': 'Operacion de recobro'
+        },
+        transaccion: {
+            '1': 'Transaccion primaria institucional',
+            '2': 'Transaccion primaria comercial',
+            '3': 'Transaccion secundaria institucional',
+            '4': 'Transaccion secundaria comercial',
+            '5': 'Transaccion final institucional'
+        },
+        unidad: {
+            'A': 'Presentacion comercial',
+            'B': 'Unidad por embalaje primario',
+            'C': 'Unidad de dispensacion'
+        }
     },
-    operacion: {
-        'CM': 'Operacion de compra',
-        'VN': 'Operacion de venta',
-        'RC': 'Operacion de recobro'
-    },
-    transaccion: {
-        '1': 'Transaccion primaria institucional',
-        '2': 'Transaccion primaria comercial',
-        '3': 'Transaccion secundaria institucional',
-        '4': 'Transaccion secundaria comercial',
-        '5': 'Transaccion final institucional'
-    },
-    unidad: {
-        'A': 'Presentacion comercial',
-        'B': 'Unidad por embalaje primario',
-        'C': 'Unidad de dispensacion'
+    en: {
+        rol: {
+            '1': '1. Manufactures or imports the medication',
+            '2': '2. Actor that neither manufactures nor imports the medication'
+        },
+        operacion: {
+            'CM': 'Purchase operation',
+            'VN': 'Sale operation',
+            'RC': 'Reimbursement operation'
+        },
+        transaccion: {
+            '1': 'Primary institutional transaction',
+            '2': 'Primary commercial transaction',
+            '3': 'Secondary institutional transaction',
+            '4': 'Secondary commercial transaction',
+            '5': 'Final institutional transaction'
+        },
+        unidad: {
+            'A': 'Commercial presentation',
+            'B': 'Unit per primary packaging',
+            'C': 'Dispensing unit'
+        }
     }
 };
+
+// Textos de UI generados por JS (KPIs, gráficas, mensajes) en ambos idiomas.
+var STR = {
+    es: {
+        placeholderMedicamento: 'Seleccione un medicamento',
+        placeholderPresentacion: 'Seleccione una presentación',
+        placeholderPresentacionPrimero: 'Seleccione un medicamento primero',
+        filtroTodos: 'Todos',
+        sinPresentacion: '(sin presentación)',
+        fichaCampos: [
+            ['principio_activo', 'Principio activo'],
+            ['via_administracion', 'Vía de administración'],
+            ['fabricante', 'Fabricante nacional'],
+            ['registro_sanitario', 'Registro sanitario INVIMA'],
+            ['estado_registro', 'Estado del registro'],
+            ['estado_cum', 'Estado de la presentación (CUM)'],
+            ['forma_farmaceutica', 'Forma farmacéutica'],
+            ['muestra_medica', 'Muestra médica'],
+            ['modalidad', 'Modalidad'],
+            ['cantidad', 'Cantidad (CUM)'],
+            ['unidad', 'Unidad (CUM)'],
+            ['unidad_medida', 'Unidad de medida'],
+            ['concentracion', 'Concentración (código CUM)'],
+            ['ium', 'IUM'],
+            ['fecha_expedicion', 'Fecha de expedición'],
+            ['fecha_vencimiento', 'Fecha de vencimiento'],
+            ['fecha_activo', 'Activo desde'],
+            ['fecha_inactivo', 'Inactivo desde']
+        ],
+        chartPrecioMinimo: 'Precio mínimo',
+        chartPrecioMaximo: 'Precio máximo',
+        chartUnidadesFacturadas: 'Unidades facturadas',
+        chartValorTotalFacturado: 'Valor total facturado',
+        tooltipUnidadesSuffix: ' unidades',
+        sinDatosAnuales: 'Sin datos anuales para la selección.',
+        sinDatosSeleccion: 'No se encontraron datos para la selección.',
+        errorCatalogo: function (msg) { return 'Error al cargar el catálogo (' + msg + '). Recarga la página.'; },
+        errorHistorico: function (msg) { return 'Error al cargar el histórico (' + msg + ').'; }
+    },
+    en: {
+        placeholderMedicamento: 'Select a medication',
+        placeholderPresentacion: 'Select a presentation',
+        placeholderPresentacionPrimero: 'Select a medication first',
+        filtroTodos: 'All',
+        sinPresentacion: '(no presentation)',
+        fichaCampos: [
+            ['principio_activo', 'Active ingredient'],
+            ['via_administracion', 'Route of administration'],
+            ['fabricante', 'National manufacturer'],
+            ['registro_sanitario', 'INVIMA sanitary registration'],
+            ['estado_registro', 'Registration status'],
+            ['estado_cum', 'Presentation status (CUM)'],
+            ['forma_farmaceutica', 'Pharmaceutical form'],
+            ['muestra_medica', 'Medical sample'],
+            ['modalidad', 'Modality'],
+            ['cantidad', 'Quantity (CUM)'],
+            ['unidad', 'Unit (CUM)'],
+            ['unidad_medida', 'Unit of measure'],
+            ['concentracion', 'Concentration (CUM code)'],
+            ['ium', 'IUM'],
+            ['fecha_expedicion', 'Issue date'],
+            ['fecha_vencimiento', 'Expiration date'],
+            ['fecha_activo', 'Active since'],
+            ['fecha_inactivo', 'Inactive since']
+        ],
+        chartPrecioMinimo: 'Minimum price',
+        chartPrecioMaximo: 'Maximum price',
+        chartUnidadesFacturadas: 'Units billed',
+        chartValorTotalFacturado: 'Total amount billed',
+        tooltipUnidadesSuffix: ' units',
+        sinDatosAnuales: 'No annual data for this selection.',
+        sinDatosSeleccion: 'No data found for this selection.',
+        errorCatalogo: function (msg) { return 'Error loading the catalog (' + msg + '). Reload the page.'; },
+        errorHistorico: function (msg) { return 'Error loading the history (' + msg + ').'; }
+    }
+};
+
+function langActual() {
+    return (window.portafolioI18n && window.portafolioI18n.getLang()) || 'es';
+}
+
+function t(key) {
+    return STR[langActual()][key];
+}
+
+function codigosActuales() {
+    return CODIGOS_POR_IDIOMA[langActual()];
+}
 
 // Índices posicionales de cada fila en data/expedientes/{no_expediente}.json
 var COL = { pc: 0, anio: 1, mes: 2, rol: 3, operacion: 4, transaccion: 5, unidad: 6, pmin: 7, pmax: 8, unidades: 9, valor: 10 };
@@ -50,61 +163,85 @@ function paletaActual() {
 // --- Arranque: cargar el diccionario (solo 10 medicamentos) --------------------
 
 $(document).ready(function () {
-    fetch('data/diccionario.json')
-        .then(function (r) {
-            if (!r.ok) throw new Error('HTTP ' + r.status);
-            return r.json();
-        })
-        .then(function (diccionario) {
-            diccionario.forEach(function (e) {
-                if (!porNombre.has(e.nombre)) porNombre.set(e.nombre, []);
-                porNombre.get(e.nombre).push(e);
-                porClave.set(e.exp + '|' + e.pc, e);
-            });
-            nombresOrdenados = Array.from(porNombre.keys()).sort();
+    var i18nReady = (window.portafolioI18n && window.portafolioI18n.ready) || Promise.resolve();
+    i18nReady.then(function () {
+        fetch('data/diccionario.json')
+            .then(function (r) {
+                if (!r.ok) throw new Error('HTTP ' + r.status);
+                return r.json();
+            })
+            .then(function (diccionario) {
+                diccionario.forEach(function (e) {
+                    if (!porNombre.has(e.nombre)) porNombre.set(e.nombre, []);
+                    porNombre.get(e.nombre).push(e);
+                    porClave.set(e.exp + '|' + e.pc, e);
+                });
+                nombresOrdenados = Array.from(porNombre.keys()).sort();
 
-            $('#panel-carga').addClass('d-none');
-            $('#panel-buscador').removeClass('d-none');
-            inicializarBuscador();
-        })
-        .catch(function (err) {
-            $('#panel-carga').text('Error al cargar el catálogo (' + err.message + '). Recarga la página.');
-        });
+                $('#panel-carga').addClass('d-none');
+                $('#panel-buscador').removeClass('d-none');
+                inicializarBuscador();
+            })
+            .catch(function (err) {
+                $('#panel-carga').text(t('errorCatalogo')(err.message));
+            });
+    });
+
+    document.addEventListener('i18n:applied', function () {
+        if (!nombresOrdenados.length) return; // catálogo aún no cargó
+        reinicializarSelect2Base();
+        // Si ya había una presentación seleccionada, poblarPresentacion() dispara
+        // 'change' en #presentacion, que en cascada vuelve a renderizar ficha,
+        // filtros, KPIs y gráficas en el idioma nuevo (ver handlers más abajo).
+        if ($('#medicamento').val()) poblarPresentacion($('#medicamento').val());
+    });
 });
+
+function reinicializarSelect2Base() {
+    var $medicamento = $('#medicamento');
+    if ($medicamento.hasClass('select2-hidden-accessible')) $medicamento.select2('destroy');
+    $medicamento.select2({ placeholder: t('placeholderMedicamento'), allowClear: true, width: '100%' });
+
+    var $presentacion = $('#presentacion');
+    if ($presentacion.hasClass('select2-hidden-accessible')) $presentacion.select2('destroy');
+    $presentacion.select2({ placeholder: t('placeholderPresentacion'), allowClear: true });
+}
+
+function poblarPresentacion(nombre) {
+    var entradas = (porNombre.get(nombre) || []).slice().sort(function (a, b) {
+        return (a.presentacion || '').localeCompare(b.presentacion || '');
+    });
+    var select = $('#presentacion');
+    var valorPrevio = select.val();
+    select.empty().append(nuevaOpcion('', t('placeholderPresentacion')));
+    entradas.forEach(function (e) {
+        var valor = e.exp + '|' + e.pc;
+        var texto = [e.pc, e.presentacion].filter(Boolean).join(' - ') || t('sinPresentacion');
+        select.append(nuevaOpcion(valor, texto));
+    });
+    select.prop('disabled', false);
+    if (valorPrevio) select.val(valorPrevio);
+    select.trigger('change');
+}
 
 function inicializarBuscador() {
     var $medicamento = $('#medicamento');
     nombresOrdenados.forEach(function (nombre) {
         $medicamento.append(nuevaOpcion(nombre, nombre));
     });
-    $medicamento.select2({ placeholder: 'Seleccione un medicamento', allowClear: true, width: '100%' });
-
-    $('#presentacion').select2({
-        placeholder: 'Seleccione una presentación',
-        allowClear: true
-    });
+    reinicializarSelect2Base();
 
     $medicamento.on('change', function () {
         var nombre = $(this).val();
         ocultarResultados();
 
         if (!nombre) {
-            $('#presentacion').empty().append(nuevaOpcion('', 'Seleccione un medicamento primero'));
+            $('#presentacion').empty().append(nuevaOpcion('', t('placeholderPresentacionPrimero')));
             $('#presentacion').prop('disabled', true).trigger('change');
             return;
         }
 
-        var entradas = (porNombre.get(nombre) || []).slice().sort(function (a, b) {
-            return (a.presentacion || '').localeCompare(b.presentacion || '');
-        });
-        var select = $('#presentacion');
-        select.empty().append(nuevaOpcion('', 'Seleccione una presentación'));
-        entradas.forEach(function (e) {
-            var valor = e.exp + '|' + e.pc;
-            var texto = [e.pc, e.presentacion].filter(Boolean).join(' - ') || '(sin presentación)';
-            select.append(nuevaOpcion(valor, texto));
-        });
-        select.prop('disabled', false).trigger('change');
+        poblarPresentacion(nombre);
     });
 
     $('#presentacion').on('change', function () {
@@ -138,27 +275,6 @@ function ocultarResultados() {
 
 // --- Ficha técnica (CUM vigente) -------------------------------------------------
 
-var FICHA_CAMPOS = [
-    ['principio_activo', 'Principio activo'],
-    ['via_administracion', 'Vía de administración'],
-    ['fabricante', 'Fabricante nacional'],
-    ['registro_sanitario', 'Registro sanitario INVIMA'],
-    ['estado_registro', 'Estado del registro'],
-    ['estado_cum', 'Estado de la presentación (CUM)'],
-    ['forma_farmaceutica', 'Forma farmacéutica'],
-    ['muestra_medica', 'Muestra médica'],
-    ['modalidad', 'Modalidad'],
-    ['cantidad', 'Cantidad (CUM)'],
-    ['unidad', 'Unidad (CUM)'],
-    ['unidad_medida', 'Unidad de medida'],
-    ['concentracion', 'Concentración (código CUM)'],
-    ['ium', 'IUM'],
-    ['fecha_expedicion', 'Fecha de expedición'],
-    ['fecha_vencimiento', 'Fecha de vencimiento'],
-    ['fecha_activo', 'Activo desde'],
-    ['fecha_inactivo', 'Inactivo desde']
-];
-
 function formatoFecha(valor) {
     if (!valor) return null;
     return String(valor).split('T')[0];
@@ -172,7 +288,7 @@ function renderFicha(entrada, ficha) {
     var esFecha = { fecha_expedicion: 1, fecha_vencimiento: 1, fecha_activo: 1, fecha_inactivo: 1 };
     var huboDato = false;
 
-    FICHA_CAMPOS.forEach(function (campo) {
+    t('fichaCampos').forEach(function (campo) {
         var clave = campo[0], etiqueta = campo[1];
         var valor = esFecha[clave] ? formatoFecha(datos[clave]) : datos[clave];
         if (valor === null || valor === undefined || valor === '') return;
@@ -240,7 +356,7 @@ function seleccionarPresentacion(noExpediente, presentacionComercial) {
             actualizarDashboard();
         })
         .catch(function (err) {
-            $('#panel-mensaje').removeClass('d-none').text('Error al cargar el histórico (' + err.message + ').');
+            $('#panel-mensaje').removeClass('d-none').text(t('errorHistorico')(err.message));
         });
 }
 
@@ -264,14 +380,15 @@ function poblarFiltro(id, codigos, mapaTexto) {
         opt.textContent = mapaTexto[cod] || cod;
         $sel.append(opt);
     });
-    $sel.select2({ placeholder: 'Todos', allowClear: true, width: '100%', closeOnSelect: false });
+    $sel.select2({ placeholder: t('filtroTodos'), allowClear: true, width: '100%', closeOnSelect: false });
 }
 
 function poblarFiltros(filas) {
-    poblarFiltro('filtro-rol', opcionesDisponibles(filas, COL.rol), CODIGOS.rol);
-    poblarFiltro('filtro-operacion', opcionesDisponibles(filas, COL.operacion), CODIGOS.operacion);
-    poblarFiltro('filtro-transaccion', opcionesDisponibles(filas, COL.transaccion), CODIGOS.transaccion);
-    poblarFiltro('filtro-unidad', opcionesDisponibles(filas, COL.unidad), CODIGOS.unidad);
+    var codigos = codigosActuales();
+    poblarFiltro('filtro-rol', opcionesDisponibles(filas, COL.rol), codigos.rol);
+    poblarFiltro('filtro-operacion', opcionesDisponibles(filas, COL.operacion), codigos.operacion);
+    poblarFiltro('filtro-transaccion', opcionesDisponibles(filas, COL.transaccion), codigos.transaccion);
+    poblarFiltro('filtro-unidad', opcionesDisponibles(filas, COL.unidad), codigos.unidad);
 }
 
 function aplicarFiltros(filas) {
@@ -369,7 +486,7 @@ function actualizarDashboard() {
 
     if (!kpis) {
         $('#panel-resultados').addClass('d-none');
-        $('#panel-mensaje').removeClass('d-none').text('No se encontraron datos para la selección.');
+        $('#panel-mensaje').removeClass('d-none').text(t('sinDatosSeleccion'));
         return;
     }
     $('#panel-mensaje').addClass('d-none');
@@ -451,7 +568,7 @@ function renderChartPrecios(mensual) {
             labels: mensual.map(function (d) { return d.periodo; }),
             datasets: [
                 {
-                    label: 'Precio mínimo',
+                    label: t('chartPrecioMinimo'),
                     data: mensual.map(function (d) { return d.precio_minimo; }),
                     borderColor: p.blue,
                     backgroundColor: p.blue,
@@ -461,7 +578,7 @@ function renderChartPrecios(mensual) {
                     tension: 0
                 },
                 {
-                    label: 'Precio máximo',
+                    label: t('chartPrecioMaximo'),
                     data: mensual.map(function (d) { return d.precio_maximo; }),
                     borderColor: p.aqua,
                     backgroundColor: p.aqua,
@@ -504,7 +621,7 @@ function renderChartUnidades(mensual) {
             labels: mensual.map(function (d) { return d.periodo; }),
             datasets: [
                 {
-                    label: 'Unidades facturadas',
+                    label: t('chartUnidadesFacturadas'),
                     data: mensual.map(function (d) { return d.unidades; }),
                     backgroundColor: p.violet,
                     borderRadius: { topLeft: 4, topRight: 4 },
@@ -520,7 +637,7 @@ function renderChartUnidades(mensual) {
                 legend: { display: false },
                 tooltip: {
                     callbacks: {
-                        label: function (item) { return formatoCompacto(item.parsed.y) + ' unidades'; }
+                        label: function (item) { return formatoCompacto(item.parsed.y) + t('tooltipUnidadesSuffix'); }
                     }
                 }
             },
@@ -543,7 +660,7 @@ function renderChartValor(mensual) {
             labels: mensual.map(function (d) { return d.periodo; }),
             datasets: [
                 {
-                    label: 'Valor total facturado',
+                    label: t('chartValorTotalFacturado'),
                     data: mensual.map(function (d) { return d.valor_total; }),
                     backgroundColor: p.orange,
                     borderRadius: { topLeft: 4, topRight: 4 },
@@ -581,7 +698,7 @@ function renderTablaAnual(anual) {
         var tr = document.createElement('tr');
         var td = document.createElement('td');
         td.colSpan = 5;
-        td.textContent = 'Sin datos anuales para la selección.';
+        td.textContent = t('sinDatosAnuales');
         tr.appendChild(td);
         $tbody.append(tr);
         return;

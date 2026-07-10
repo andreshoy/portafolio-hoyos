@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Hoyos Analytics — Tableros de control y modelos predictivos</title>
+  <title data-i18n="meta.home.title">Andrés Hoyos — Tableros de control y modelos predictivos</title>
   <meta name="description" content="Tableros de control y modelos predictivos con machine learning para control de cartera, rentas y priorización de cobro." />
   <link rel="stylesheet" href="/assets/css/styles.css" />
 </head>
 <body>
   <header class="site-header">
     <nav class="nav">
-      <a class="nav-brand" href="/" data-i18n="nav.brand">Hoyos Analytics</a>
+      <a class="nav-brand" href="/" data-i18n="nav.brand">Andrés Hoyos</a>
       <button class="nav-toggle" aria-label="Abrir menú">☰</button>
       <ul class="nav-links">
         <li><a href="/#servicios" data-i18n="nav.servicios">Servicios</a></li>
@@ -19,7 +19,14 @@
         <li><a href="/#contacto" data-i18n="nav.contacto">Contacto</a></li>
       </ul>
       <div class="nav-actions">
-        <button class="lang-toggle" aria-label="Cambiar idioma">EN</button>
+        <div class="lang-switch" role="group" aria-label="Idioma / Language">
+          <button type="button" class="lang-opt" data-lang="es" aria-label="Español">
+            <span class="flag" aria-hidden="true">🇨🇴</span><span>ES</span>
+          </button>
+          <button type="button" class="lang-opt" data-lang="en" aria-label="English">
+            <span class="flag" aria-hidden="true">🇺🇸</span><span>EN</span>
+          </button>
+        </div>
       </div>
     </nav>
   </header>
@@ -118,7 +125,7 @@
 
   <footer class="site-footer">
     <div class="container">
-      <span>&copy; <span data-year></span> Hoyos Analytics. <span data-i18n="footer.rights">Todos los derechos reservados.</span></span>
+      <span>&copy; <span data-year></span> Andrés Hoyos. <span data-i18n="footer.rights">Todos los derechos reservados.</span></span>
       <span data-i18n="footer.built">Sitio construido con HTML, CSS y JS puro.</span>
     </div>
   </footer>

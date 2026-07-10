@@ -10,6 +10,35 @@
 
 let MODELO = null;
 
+function langActual() {
+  return (window.portafolioI18n && window.portafolioI18n.getLang()) || 'es';
+}
+
+var STR = {
+  es: {
+    error: (msg) => 'Error al cargar el modelo (' + msg + ').',
+    anios: ' años',
+    riesgoPrefijo: 'Riesgo ',
+    badge: { critico: 'Crítico', alto: 'Alto', medio: 'Medio', bajo: 'Bajo' },
+    chartLabel: 'Probabilidad de seguir en mora',
+    tooltipTitleSuffix: ' años',
+    tooltipLabelSuffix: '% de probabilidad de seguir en mora',
+    ejeXTitulo: 'Años desde hoy',
+    ejeYTitulo: '% que sigue en mora',
+  },
+  en: {
+    error: (msg) => 'Error loading the model (' + msg + ').',
+    anios: ' years',
+    riesgoPrefijo: 'Risk: ',
+    badge: { critico: 'Critical', alto: 'High', medio: 'Medium', bajo: 'Low' },
+    chartLabel: 'Probability of still being delinquent',
+    tooltipTitleSuffix: ' years',
+    tooltipLabelSuffix: '% probability of still being delinquent',
+    ejeXTitulo: 'Years from today',
+    ejeYTitulo: '% still delinquent',
+  },
+};
+
 function erf(x) {
   // Aproximación de Abramowitz-Stegun (máx. error ~1.5e-7)
   const sign = x < 0 ? -1 : 1;
@@ -119,10 +148,11 @@ let chartCurva = null;
 // pago largos, así que la señal útil para clasificar riesgo está más adelante
 // en la curva — ver distribución de percentiles en model/preparar_modelo.py).
 function badgeRiesgo(probA10Anios) {
-  if (probA10Anios >= 0.80) return { texto: 'Crítico', clase: 'critical' };
-  if (probA10Anios >= 0.55) return { texto: 'Alto', clase: 'serious' };
-  if (probA10Anios >= 0.30) return { texto: 'Medio', clase: 'warning' };
-  return { texto: 'Bajo', clase: 'good' };
+  const b = STR[langActual()].badge;
+  if (probA10Anios >= 0.80) return { texto: b.critico, clase: 'critical' };
+  if (probA10Anios >= 0.55) return { texto: b.alto, clase: 'serious' };
+  if (probA10Anios >= 0.30) return { texto: b.medio, clase: 'warning' };
+  return { texto: b.bajo, clase: 'good' };
 }
 
 function renderResultado(xCrudo) {
@@ -133,14 +163,14 @@ function renderResultado(xCrudo) {
   const horizontes = [2, 10, 20];
   const probs = horizontes.map((h) => supervivencia(mu, h));
 
-  document.getElementById('kpi-mediana').textContent = medianaAnios.toFixed(1) + ' años';
+  document.getElementById('kpi-mediana').textContent = medianaAnios.toFixed(1) + STR[langActual()].anios;
   document.getElementById('kpi-prob-2a').textContent = (probs[0] * 100).toFixed(0) + '%';
   document.getElementById('kpi-prob-10a').textContent = (probs[1] * 100).toFixed(0) + '%';
   document.getElementById('kpi-prob-20a').textContent = (probs[2] * 100).toFixed(0) + '%';
 
   const badge = badgeRiesgo(probs[1]);
   const badgeEl = document.getElementById('badge-riesgo');
-  badgeEl.textContent = 'Riesgo ' + badge.texto;
+  badgeEl.textContent = STR[langActual()].riesgoPrefijo + badge.texto;
   badgeEl.className = 'badge ' + badge.clase;
 
   const p = paletaActual();
@@ -161,7 +191,7 @@ function renderResultado(xCrudo) {
     data: {
       labels,
       datasets: [{
-        label: 'Probabilidad de seguir en mora',
+        label: STR[langActual()].chartLabel,
         data: datos,
         borderColor: p.blue,
         backgroundColor: p.blue,
@@ -179,8 +209,8 @@ function renderResultado(xCrudo) {
         legend: { display: false },
         tooltip: {
           callbacks: {
-            title: (items) => items[0].label + ' años',
-            label: (item) => item.parsed.y.toFixed(1) + '% de probabilidad de seguir en mora',
+            title: (items) => items[0].label + STR[langActual()].tooltipTitleSuffix,
+            label: (item) => item.parsed.y.toFixed(1) + STR[langActual()].tooltipLabelSuffix,
           },
         },
       },
@@ -188,13 +218,13 @@ function renderResultado(xCrudo) {
         x: {
           grid: { display: false },
           ticks: { color: p.tick, maxTicksLimit: 10, callback: (v, i) => labels[i] },
-          title: { display: true, text: 'Años desde hoy', color: p.tick },
+          title: { display: true, text: STR[langActual()].ejeXTitulo, color: p.tick },
         },
         y: {
           min: 0, max: 100,
           grid: { color: p.grid },
           ticks: { color: p.tick, callback: (v) => v + '%' },
-          title: { display: true, text: '% que sigue en mora', color: p.tick },
+          title: { display: true, text: STR[langActual()].ejeYTitulo, color: p.tick },
         },
       },
     },
@@ -203,13 +233,15 @@ function renderResultado(xCrudo) {
 
 document.addEventListener('DOMContentLoaded', async () => {
   const cargando = document.getElementById('cargando-modelo');
+  const i18nReady = (window.portafolioI18n && window.portafolioI18n.ready) || Promise.resolve();
+  await i18nReady;
   try {
     MODELO = await cargarModelo();
     cargando.classList.add('d-none-js');
     document.getElementById('form-simulador').classList.remove('d-none-js');
     renderResultado(leerFormulario());
   } catch (err) {
-    cargando.textContent = 'Error al cargar el modelo (' + err.message + ').';
+    cargando.textContent = STR[langActual()].error(err.message);
     return;
   }
 

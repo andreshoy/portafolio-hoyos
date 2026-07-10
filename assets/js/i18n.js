@@ -3,6 +3,10 @@
 (function () {
   const SUPPORTED = ['es', 'en'];
   const STORAGE_KEY = 'portafolio-lang';
+  let currentDict = null;
+  let currentLang = null;
+  let resolveReady;
+  const ready = new Promise((resolve) => { resolveReady = resolve; });
 
   function detectDefaultLang() {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -18,11 +22,18 @@
   }
 
   function applyDict(dict, lang) {
+    currentDict = dict;
+    currentLang = lang;
     document.documentElement.lang = lang;
 
     document.querySelectorAll('[data-i18n]').forEach((el) => {
       const key = el.getAttribute('data-i18n');
       if (dict[key] !== undefined) el.textContent = dict[key];
+    });
+
+    document.querySelectorAll('[data-i18n-html]').forEach((el) => {
+      const key = el.getAttribute('data-i18n-html');
+      if (dict[key] !== undefined) el.innerHTML = dict[key];
     });
 
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
@@ -35,8 +46,11 @@
       if (dict[key] !== undefined) el.setAttribute('aria-label', dict[key]);
     });
 
-    const toggle = document.querySelector('.lang-toggle');
-    if (toggle) toggle.textContent = lang === 'es' ? 'EN' : 'ES';
+    document.querySelectorAll('.lang-opt').forEach((btn) => {
+      const isActive = btn.getAttribute('data-lang') === lang;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
 
     // Permite que páginas con contenido dinámico (tablas, charts) se
     // vuelvan a renderizar con el idioma y diccionario activos.
@@ -48,6 +62,7 @@
     const dict = await loadDict(lang);
     localStorage.setItem(STORAGE_KEY, lang);
     applyDict(dict, lang);
+    if (resolveReady) { resolveReady({ lang, dict }); resolveReady = null; }
   }
 
   document.addEventListener('DOMContentLoaded', async () => {
@@ -57,14 +72,21 @@
       console.error(err);
     }
 
-    const toggle = document.querySelector('.lang-toggle');
-    if (toggle) {
-      toggle.addEventListener('click', () => {
-        const next = document.documentElement.lang === 'es' ? 'en' : 'es';
-        setLang(next).catch((err) => console.error(err));
+    document.querySelectorAll('.lang-opt').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        setLang(btn.getAttribute('data-lang')).catch((err) => console.error(err));
       });
-    }
+    });
   });
 
-  window.portafolioI18n = { setLang, getSupportedLangs: () => SUPPORTED.slice() };
+  window.portafolioI18n = {
+    setLang,
+    getSupportedLangs: () => SUPPORTED.slice(),
+    // Resuelve con { lang, dict } una vez que el idioma inicial ya se aplicó;
+    // los scripts de los demos lo esperan antes de su primer render para no
+    // dibujar en el idioma equivocado por una carrera con i18n.js.
+    ready,
+    getLang: () => currentLang,
+    getDict: () => currentDict,
+  };
 })();

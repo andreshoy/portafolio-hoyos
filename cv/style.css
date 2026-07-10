@@ -87,9 +87,9 @@ a:hover { text-decoration: underline; }
 }
 
 /* ============================================================
-   HEADER
+   HEADER (personal info banner — distinct from the global .site-header nav)
    ============================================================ */
-.site-header {
+.cv-header {
   grid-area: header;
   background: var(--accent);
   color: #fff;
@@ -138,50 +138,6 @@ a:hover { text-decoration: underline; }
   flex-direction: column;
   align-items: flex-end;
   gap: 0.75rem;
-}
-
-.lang-toggle {
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-  background: rgba(255,255,255,0.15);
-  border-radius: 99px;
-  padding: 0.2rem 0.5rem;
-}
-
-.lang-btn {
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.7);
-  font-family: inherit;
-  font-size: 0.78rem;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  cursor: pointer;
-  padding: 0.15rem 0.35rem;
-  border-radius: 99px;
-  transition: color 0.15s, background 0.15s;
-  display: flex;
-  align-items: center;
-  gap: 0.3rem;
-}
-
-.flag-icon {
-  width: 1.1em;
-  height: 1.1em;
-  vertical-align: middle;
-}
-
-.lang-btn:hover { color: #fff; }
-
-.lang-btn.active {
-  color: var(--accent);
-  background: #fff;
-}
-
-.lang-sep {
-  color: rgba(255,255,255,0.35);
-  font-size: 0.75rem;
 }
 
 .header-contact {
@@ -486,7 +442,7 @@ a:hover { text-decoration: underline; }
 
   .sidebar { border-right: none; border-top: 1px solid var(--border); }
 
-  .site-header {
+  .cv-header {
     flex-direction: column;
     align-items: flex-start;
     padding: 1.75rem 1.5rem 1.5rem;
@@ -524,8 +480,8 @@ a:hover { text-decoration: underline; }
     print-color-adjust: exact;
   }
 
-  /* Hide interactive elements */
-  .lang-toggle { display: none !important; }
+  /* Hide interactive/navigational elements not meant for the printed resume */
+  .site-header { display: none !important; }
 
   .page {
     box-shadow: none;
@@ -536,7 +492,7 @@ a:hover { text-decoration: underline; }
     background-image: linear-gradient(to right, var(--sidebar-bg) 190px, #fff 190px);
   }
 
-  .site-header {
+  .cv-header {
     padding: 1rem 1.4rem 0.9rem;
     gap: 1rem;
   }

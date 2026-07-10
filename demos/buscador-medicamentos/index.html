@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Buscador de precios de medicamentos — Hoyos Analytics</title>
+  <title data-i18n="meta.medicamentos.title">Buscador de precios de medicamentos — Andrés Hoyos</title>
   <meta name="description" content="Demo: consulta de precios de medicamentos con datos públicos de SISPRO (Colombia), limitada a 10 medicamentos de muestra." />
   <script>
     document.documentElement.setAttribute(
@@ -71,7 +71,7 @@
 <body>
   <header class="site-header">
     <nav class="nav">
-      <a class="nav-brand" href="/" data-i18n="nav.brand">Hoyos Analytics</a>
+      <a class="nav-brand" href="/" data-i18n="nav.brand">Andrés Hoyos</a>
       <button class="nav-toggle" aria-label="Abrir menú">☰</button>
       <ul class="nav-links">
         <li><a href="/#servicios" data-i18n="nav.servicios">Servicios</a></li>
@@ -80,7 +80,14 @@
         <li><a href="/#contacto" data-i18n="nav.contacto">Contacto</a></li>
       </ul>
       <div class="nav-actions">
-        <button class="lang-toggle" aria-label="Cambiar idioma">EN</button>
+        <div class="lang-switch" role="group" aria-label="Idioma / Language">
+          <button type="button" class="lang-opt" data-lang="es" aria-label="Español">
+            <span class="flag" aria-hidden="true">🇨🇴</span><span>ES</span>
+          </button>
+          <button type="button" class="lang-opt" data-lang="en" aria-label="English">
+            <span class="flag" aria-hidden="true">🇺🇸</span><span>EN</span>
+          </button>
+        </div>
       </div>
     </nav>
   </header>
@@ -88,37 +95,30 @@
   <div class="demo-shell">
     <div class="container-demo">
       <div class="demo-header">
-        <span class="tag">Buscador</span>
-        <h1>Buscador de precios de medicamentos</h1>
-        <p>
+        <span class="tag" data-i18n="demos.medicamentos.tag">Buscador</span>
+        <h1 data-i18n="demos.medicamentos.title">Buscador de precios de medicamentos</h1>
+        <p data-i18n="demos.medicamentos.page.lede">
           Consulta el histórico de precios reportados en SISPRO (Colombia) por medicamento y presentación,
           con KPIs y gráficas de evolución mensual/anual.
         </p>
       </div>
 
-      <p class="demo-note">
-        Datos públicos reales del sistema SISPRO, recortados a los <strong>10 medicamentos con historial
-        más completo</strong> para esta demo (el buscador original consulta ~8.600 expedientes). No se
-        muestra información privada ni de ninguna entidad contratante.
-        <br>
-        <em>Real public SISPRO data, limited to the 10 medications with the most complete history for
-        this demo — the original search tool covers ~8,600 records.</em>
-      </p>
+      <p class="demo-note" data-i18n-html="demos.medicamentos.note"></p>
 
-      <p id="panel-carga">Cargando catálogo de medicamentos…</p>
+      <p id="panel-carga" data-i18n="demos.medicamentos.page.cargando">Cargando catálogo de medicamentos…</p>
 
       <div id="panel-buscador" class="d-none">
         <div class="mb-3">
-          <label for="medicamento" class="form-label">Medicamento:</label>
+          <label for="medicamento" class="form-label" data-i18n="demos.medicamentos.page.label.medicamento">Medicamento:</label>
           <select id="medicamento" class="form-select" style="width: 100%">
-            <option value="">Seleccione un medicamento</option>
+            <option value="" data-i18n="demos.medicamentos.page.placeholder.medicamento">Seleccione un medicamento</option>
           </select>
         </div>
 
         <div class="mb-3">
-          <label for="presentacion" class="form-label">Presentación:</label>
+          <label for="presentacion" class="form-label" data-i18n="demos.medicamentos.page.label.presentacion">Presentación:</label>
           <select id="presentacion" class="form-select" style="width: 100%" disabled>
-            <option value="">Seleccione un medicamento primero</option>
+            <option value="" data-i18n="demos.medicamentos.page.placeholder.presentacionPrimero">Seleccione un medicamento primero</option>
           </select>
         </div>
       </div>
@@ -126,19 +126,19 @@
       <div id="panel-filtros" class="d-none">
         <div class="row g-3 mb-3" id="filtros-row">
           <div class="col-6 col-lg-3">
-            <label class="form-label">Rol actor reportante</label>
+            <label class="form-label" data-i18n="demos.medicamentos.page.filtro.rol">Rol actor reportante</label>
             <select id="filtro-rol" class="form-select" multiple></select>
           </div>
           <div class="col-6 col-lg-3">
-            <label class="form-label">Tipo de operación</label>
+            <label class="form-label" data-i18n="demos.medicamentos.page.filtro.operacion">Tipo de operación</label>
             <select id="filtro-operacion" class="form-select" multiple></select>
           </div>
           <div class="col-6 col-lg-3">
-            <label class="form-label">Tipo de transacción</label>
+            <label class="form-label" data-i18n="demos.medicamentos.page.filtro.transaccion">Tipo de transacción</label>
             <select id="filtro-transaccion" class="form-select" multiple></select>
           </div>
           <div class="col-6 col-lg-3">
-            <label class="form-label">Unidad de factura</label>
+            <label class="form-label" data-i18n="demos.medicamentos.page.filtro.unidad">Unidad de factura</label>
             <select id="filtro-unidad" class="form-select" multiple></select>
           </div>
         </div>
@@ -146,7 +146,7 @@
 
       <div id="panel-ficha" class="d-none mb-4">
         <div class="card-surface chart-card">
-          <h5>Ficha técnica (CUM vigente — INVIMA)</h5>
+          <h5 data-i18n="demos.medicamentos.page.ficha.titulo">Ficha técnica (CUM vigente — INVIMA)</h5>
           <div class="row g-2" id="ficha-grid"></div>
         </div>
       </div>
@@ -155,38 +155,38 @@
         <div class="row g-3 mb-4" id="kpi-row">
           <div class="col-6 col-lg-2">
             <div class="card-surface stat-tile">
-              <div class="stat-label">Precio promedio</div>
+              <div class="stat-label" data-i18n="demos.medicamentos.page.kpi.precioPromedio">Precio promedio</div>
               <div class="stat-value" id="kpi-precio-promedio">—</div>
             </div>
           </div>
           <div class="col-6 col-lg-2">
             <div class="card-surface stat-tile">
-              <div class="stat-label">Precio mínimo histórico</div>
+              <div class="stat-label" data-i18n="demos.medicamentos.page.kpi.precioMinimo">Precio mínimo histórico</div>
               <div class="stat-value" id="kpi-precio-minimo">—</div>
             </div>
           </div>
           <div class="col-6 col-lg-2">
             <div class="card-surface stat-tile">
-              <div class="stat-label">Precio máximo histórico</div>
+              <div class="stat-label" data-i18n="demos.medicamentos.page.kpi.precioMaximo">Precio máximo histórico</div>
               <div class="stat-value" id="kpi-precio-maximo">—</div>
             </div>
           </div>
           <div class="col-6 col-lg-2">
             <div class="card-surface stat-tile">
-              <div class="stat-label">Variación</div>
+              <div class="stat-label" data-i18n="demos.medicamentos.page.kpi.variacion">Variación</div>
               <div class="stat-value" id="kpi-variacion">—</div>
               <div class="stat-delta" id="kpi-variacion-sub"></div>
             </div>
           </div>
           <div class="col-6 col-lg-2">
             <div class="card-surface stat-tile">
-              <div class="stat-label">Unidades facturadas</div>
+              <div class="stat-label" data-i18n="demos.medicamentos.page.kpi.unidades">Unidades facturadas</div>
               <div class="stat-value" id="kpi-unidades">—</div>
             </div>
           </div>
           <div class="col-6 col-lg-2">
             <div class="card-surface stat-tile">
-              <div class="stat-label">Valor total facturado</div>
+              <div class="stat-label" data-i18n="demos.medicamentos.page.kpi.valor">Valor total facturado</div>
               <div class="stat-value" id="kpi-valor">—</div>
             </div>
           </div>
@@ -195,36 +195,36 @@
         <div class="row g-3 mb-4">
           <div class="col-12">
             <div class="card-surface chart-card">
-              <h5>Evolución mensual de precio unitario</h5>
-              <div class="chart-sub">Mes a mes desde octubre de 2019 (antes de esa fecha el dato se reporta anual o trimestral — ver tabla histórica anual)</div>
+              <h5 data-i18n="demos.medicamentos.page.chart.precios">Evolución mensual de precio unitario</h5>
+              <div class="chart-sub" data-i18n="demos.medicamentos.page.chart.preciosSub">Mes a mes desde octubre de 2019 (antes de esa fecha el dato se reporta anual o trimestral — ver tabla histórica anual)</div>
               <canvas id="chart-precios" height="90"></canvas>
             </div>
           </div>
           <div class="col-md-6">
             <div class="card-surface chart-card">
-              <h5>Unidades facturadas (mensual)</h5>
+              <h5 data-i18n="demos.medicamentos.page.chart.unidades">Unidades facturadas (mensual)</h5>
               <canvas id="chart-unidades" height="120"></canvas>
             </div>
           </div>
           <div class="col-md-6">
             <div class="card-surface chart-card">
-              <h5>Valor total facturado (mensual)</h5>
+              <h5 data-i18n="demos.medicamentos.page.chart.valor">Valor total facturado (mensual)</h5>
               <canvas id="chart-valor" height="120"></canvas>
             </div>
           </div>
         </div>
 
         <div class="card-surface chart-card mb-4">
-          <h5>Histórico anual</h5>
+          <h5 data-i18n="demos.medicamentos.page.tabla.titulo">Histórico anual</h5>
           <div class="table-responsive">
             <table class="table table-sm table-striped mb-0" id="tabla-anual">
               <thead>
                 <tr>
-                  <th>Año</th>
-                  <th>Precio mínimo</th>
-                  <th>Precio máximo</th>
-                  <th>Unidades facturadas</th>
-                  <th>Valor total facturado</th>
+                  <th data-i18n="demos.medicamentos.page.tabla.col.anio">Año</th>
+                  <th data-i18n="demos.medicamentos.page.kpi.precioMinimoCorto">Precio mínimo</th>
+                  <th data-i18n="demos.medicamentos.page.kpi.precioMaximoCorto">Precio máximo</th>
+                  <th data-i18n="demos.medicamentos.page.kpi.unidades">Unidades facturadas</th>
+                  <th data-i18n="demos.medicamentos.page.kpi.valor">Valor total facturado</th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -233,13 +233,13 @@
         </div>
       </div>
 
-      <p id="panel-mensaje" class="d-none">No se encontraron datos para la selección.</p>
+      <p id="panel-mensaje" class="d-none" data-i18n="demos.medicamentos.page.msg.sinDatos">No se encontraron datos para la selección.</p>
     </div>
   </div>
 
   <footer class="site-footer">
     <div class="container">
-      <span>&copy; <span data-year></span> Hoyos Analytics. <span data-i18n="footer.rights">Todos los derechos reservados.</span></span>
+      <span>&copy; <span data-year></span> Andrés Hoyos. <span data-i18n="footer.rights">Todos los derechos reservados.</span></span>
       <span data-i18n="footer.built">Sitio construido con HTML, CSS y JS puro.</span>
     </div>
   </footer>
