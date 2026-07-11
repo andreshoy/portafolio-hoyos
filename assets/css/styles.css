@@ -504,6 +504,57 @@ img { max-width: 100%; display: block; }
   .hi3-dot, .hi3-spark { animation: none; }
 }
 
+/* ---------- "Medir impacto" illustration (comparación antes/después) ---------- */
+
+.hi4-bar {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.hi4-bar-muted { fill: var(--baseline); }
+
+.hi4-bar-brand {
+  fill: var(--brand);
+  animation: hi4-bar-grow 2.4s ease-in-out infinite;
+}
+
+.hi4-bar-1 { animation-delay: 0s; }
+.hi4-bar-2 { animation-delay: 0.2s; }
+
+.hi4-divider {
+  stroke: var(--gridline);
+  stroke-width: 2;
+  stroke-dasharray: 4 4;
+}
+
+.hi4-badge-circle {
+  fill: var(--status-good);
+  opacity: 0.15;
+  animation: hi4-badge-pulse 2.6s ease-in-out infinite;
+}
+
+.hi4-badge-check {
+  stroke: var(--status-good);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+@keyframes hi4-bar-grow {
+  0%, 100% { transform: scaleY(0.9); }
+  50% { transform: scaleY(1.08); }
+}
+
+@keyframes hi4-badge-pulse {
+  0%, 100% { opacity: 0.12; }
+  50% { opacity: 0.28; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hi4-bar-brand, .hi4-badge-circle { animation: none; }
+}
+
 .viz-kpi-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
