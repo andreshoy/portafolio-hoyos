@@ -35,7 +35,6 @@
     <section class="hero">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <p class="hero-eyebrow" data-i18n="hero.eyebrow">Tableros de control y modelos predictivos</p>
           <h1 data-i18n="hero.title">Haz que los datos hablen tu idioma</h1>
           <p class="lede" data-i18n="hero.lede">
             Diseño tableros de control y modelos predictivos con machine learning para
@@ -48,51 +47,44 @@
           </div>
         </div>
 
-        <div class="hero-visual" id="hero-visual" aria-hidden="true">
-          <div class="hero-visual-card" id="hero-visual-card">
-            <div class="hero-visual-head">
-              <span class="hero-visual-label" data-i18n="hero.viz.chartLabel">De datos a decisiones</span>
-              <span class="hero-visual-badge" data-i18n="hero.viz.badge">Ilustrativo</span>
+        <div class="viz-stage" aria-hidden="true">
+          <div class="viz-card">
+            <div class="viz-head">
+              <span class="viz-label" data-i18n="hero.viz.chartLabel">De datos a decisiones</span>
+              <span class="viz-badge" data-i18n="viz.badge">Ilustrativo</span>
             </div>
-            <div class="hero-illustration" aria-hidden="true">
-              <svg class="hero-illustration-svg" viewBox="0 0 360 140" fill="none" preserveAspectRatio="xMidYMid meet">
+            <div class="viz-illustration">
+              <svg class="viz-illustration-svg" viewBox="0 0 360 140" fill="none" preserveAspectRatio="xMidYMid meet">
                 <rect class="hi-bubble" x="20" y="12" width="320" height="86" rx="16" />
-                <g class="hi-mesh" stroke-width="1.6">
-                  <line class="hi-link" x1="80" y1="72" x2="150" y2="40" />
-                  <line class="hi-link" x1="150" y1="40" x2="220" y2="66" />
-                  <line class="hi-link" x1="80" y1="72" x2="180" y2="90" />
-                  <line class="hi-link" x1="180" y1="90" x2="220" y2="66" />
-                  <line class="hi-link" x1="220" y1="66" x2="270" y2="84" />
-                  <line class="hi-link" x1="180" y1="90" x2="270" y2="84" />
+                <g class="hi-bars">
+                  <rect class="hi-bar hi-bar-1" x="60" y="52" width="26" height="34" rx="4" />
+                  <rect class="hi-bar hi-bar-2" x="112" y="34" width="26" height="52" rx="4" />
+                  <rect class="hi-bar hi-bar-3" x="164" y="46" width="26" height="40" rx="4" />
+                  <rect class="hi-bar hi-bar-4" x="216" y="26" width="26" height="60" rx="4" />
+                  <rect class="hi-bar hi-bar-5" x="268" y="40" width="26" height="46" rx="4" />
                 </g>
-                <g class="hi-nodes">
-                  <circle class="hi-node hi-node-1" cx="80" cy="72" r="6" />
-                  <circle class="hi-node hi-node-2" cx="150" cy="40" r="6" />
-                  <circle class="hi-node hi-node-3" cx="220" cy="66" r="7" />
-                  <circle class="hi-node hi-node-4" cx="180" cy="90" r="6" />
-                  <circle class="hi-node hi-node-5" cx="270" cy="84" r="6" />
-                </g>
-                <g class="hi-waves" stroke-width="4" stroke-linecap="round">
-                  <line class="hi-wave hi-wave-1" x1="140" y1="132" x2="140" y2="126" />
-                  <line class="hi-wave hi-wave-2" x1="165" y1="132" x2="165" y2="126" />
-                  <line class="hi-wave hi-wave-3" x1="190" y1="132" x2="190" y2="126" />
-                  <line class="hi-wave hi-wave-4" x1="215" y1="132" x2="215" y2="126" />
-                  <line class="hi-wave hi-wave-5" x1="240" y1="132" x2="240" y2="126" />
+                <polyline class="hi-trend" points="73,44 125,28 177,38 229,20 281,32" />
+                <g class="hi-trend-dots">
+                  <circle class="hi-trend-dot hi-trend-dot-1" cx="73" cy="44" r="4" />
+                  <circle class="hi-trend-dot hi-trend-dot-2" cx="125" cy="28" r="4" />
+                  <circle class="hi-trend-dot hi-trend-dot-3" cx="177" cy="38" r="4" />
+                  <circle class="hi-trend-dot hi-trend-dot-4" cx="229" cy="20" r="4" />
+                  <circle class="hi-trend-dot hi-trend-dot-5" cx="281" cy="32" r="4" />
                 </g>
               </svg>
             </div>
-            <div class="hero-kpi-row">
-              <div class="hero-kpi">
-                <div class="hero-kpi-value"><span class="hero-kpi-num" data-target="128">0</span></div>
-                <div class="hero-kpi-label" data-i18n="hero.viz.kpi1">KPIs monitoreados</div>
+            <div class="viz-kpi-row">
+              <div class="viz-kpi">
+                <div class="viz-kpi-value"><span class="viz-kpi-num" data-target="128">0</span></div>
+                <div class="viz-kpi-label" data-i18n="hero.viz.kpi1">KPIs monitoreados</div>
               </div>
-              <div class="hero-kpi">
-                <div class="hero-kpi-value"><span class="hero-kpi-num" data-target="94" data-suffix="%">0</span></div>
-                <div class="hero-kpi-label" data-i18n="hero.viz.kpi2">Precisión del modelo</div>
+              <div class="viz-kpi">
+                <div class="viz-kpi-value"><span class="viz-kpi-num" data-target="94" data-suffix="%">0</span></div>
+                <div class="viz-kpi-label" data-i18n="hero.viz.kpi2">Precisión del modelo</div>
               </div>
-              <div class="hero-kpi">
-                <div class="hero-kpi-value">-<span class="hero-kpi-num" data-target="40" data-suffix="%">0</span></div>
-                <div class="hero-kpi-label" data-i18n="hero.viz.kpi3">Menos tiempo de respuesta</div>
+              <div class="viz-kpi">
+                <div class="viz-kpi-value">-<span class="viz-kpi-num" data-target="40" data-suffix="%">0</span></div>
+                <div class="viz-kpi-label" data-i18n="hero.viz.kpi3">Menos tiempo de respuesta</div>
               </div>
             </div>
           </div>
@@ -104,52 +96,149 @@
       <div class="container">
         <h2 class="section-title" data-i18n="services.title">Lo que hacemos</h2>
         <p class="section-lede" data-i18n="services.lede">Tres formas de convertir los datos de tu empresa en decisiones, procesos más eficientes y mejores resultados.</p>
-        <div class="card-grid">
-          <div class="card">
-            <div class="card-icon">
-              <svg class="icon-anim icon-bars" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-                <rect class="bar bar-1" x="3.5" y="10" width="3.4" height="10" rx="1" fill="currentColor" stroke="none" />
-                <rect class="bar bar-2" x="10.3" y="4" width="3.4" height="16" rx="1" fill="currentColor" stroke="none" />
-                <rect class="bar bar-3" x="17.1" y="13" width="3.4" height="7" rx="1" fill="currentColor" stroke="none" />
-              </svg>
+        <div class="card-grid card-grid--viz">
+          <div class="viz-stage">
+            <div class="viz-card">
+              <div class="viz-head" aria-hidden="true">
+                <span class="viz-label" data-i18n="services.data.viz.label">Tu operación en un vistazo</span>
+                <span class="viz-badge" data-i18n="viz.badge">Ilustrativo</span>
+              </div>
+              <div class="viz-illustration" aria-hidden="true">
+                <svg class="viz-illustration-svg" viewBox="0 0 360 140" fill="none" preserveAspectRatio="xMidYMid meet">
+                  <rect class="hi-bubble" x="20" y="12" width="320" height="86" rx="16" />
+                  <g class="hi1-tiles">
+                    <rect class="hi1-tile" x="30" y="22" width="84" height="32" rx="8" />
+                    <rect class="hi1-tile" x="138" y="22" width="84" height="32" rx="8" />
+                    <rect class="hi1-tile" x="246" y="22" width="84" height="32" rx="8" />
+                  </g>
+                  <text class="hi1-tile-num" x="40" y="43">128</text>
+                  <text class="hi1-tile-num" x="148" y="43">24h</text>
+                  <text class="hi1-tile-num" x="256" y="43">-40%</text>
+                  <g class="hi1-arrows">
+                    <path class="hi1-arrow hi1-arrow-up hi1-arrow-1" d="M94 43 L100 33 L106 43 Z" />
+                    <path class="hi1-arrow hi1-arrow-up hi1-arrow-2" d="M202 43 L208 33 L214 43 Z" />
+                    <path class="hi1-arrow hi1-arrow-down hi1-arrow-3" d="M310 33 L316 43 L322 33 Z" />
+                  </g>
+                  <g class="hi1-bars">
+                    <rect class="hi-bar hi-bar-1" x="60" y="76" width="26" height="14" rx="3" />
+                    <rect class="hi-bar hi-bar-2" x="112" y="68" width="26" height="22" rx="3" />
+                    <rect class="hi-bar hi-bar-3" x="164" y="72" width="26" height="18" rx="3" />
+                    <rect class="hi-bar hi-bar-4" x="216" y="64" width="26" height="26" rx="3" />
+                    <rect class="hi-bar hi-bar-5" x="268" y="70" width="26" height="20" rx="3" />
+                  </g>
+                </svg>
+              </div>
+              <div class="viz-kpi-row" aria-hidden="true">
+                <div class="viz-kpi">
+                  <div class="viz-kpi-value"><span class="viz-kpi-num" data-target="128">0</span></div>
+                  <div class="viz-kpi-label" data-i18n="services.data.viz.kpi1">KPIs monitoreados</div>
+                </div>
+                <div class="viz-kpi">
+                  <div class="viz-kpi-value"><span class="viz-kpi-num" data-target="24" data-suffix="h">0</span></div>
+                  <div class="viz-kpi-label" data-i18n="services.data.viz.kpi2">Actualización de datos</div>
+                </div>
+                <div class="viz-kpi">
+                  <div class="viz-kpi-value">-<span class="viz-kpi-num" data-target="40" data-suffix="%">0</span></div>
+                  <div class="viz-kpi-label" data-i18n="services.data.viz.kpi3">Menos tiempo de reporte</div>
+                </div>
+              </div>
+              <h3 data-i18n="services.data.title">Tableros de control</h3>
+              <p data-i18n="services.data.desc">
+                KPIs y gráficos que convierten datos dispersos en
+                información clara y accionable, lista para la toma de decisiones.
+              </p>
             </div>
-            <h3 data-i18n="services.data.title">Datos</h3>
-            <p data-i18n="services.data.desc">
-              KPIs, gráficos y tableros de control que convierten datos dispersos en
-              información clara y accionable, lista para la toma de decisiones.
-            </p>
           </div>
-          <div class="card">
-            <div class="card-icon">
-              <svg class="icon-anim icon-network" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-                <line x1="6" y1="7" x2="12" y2="17" />
-                <line x1="18" y1="7" x2="12" y2="17" />
-                <line x1="6" y1="7" x2="18" y2="7" />
-                <circle class="node node-1" cx="6" cy="7" r="2.4" fill="currentColor" stroke="none" />
-                <circle class="node node-2" cx="18" cy="7" r="2.4" fill="currentColor" stroke="none" />
-                <circle class="node node-3" cx="12" cy="17" r="2.6" fill="currentColor" stroke="none" />
-              </svg>
+
+          <div class="viz-stage">
+            <div class="viz-card">
+              <div class="viz-head" aria-hidden="true">
+                <span class="viz-label" data-i18n="services.ml.viz.label">Predicción en tiempo real</span>
+                <span class="viz-badge" data-i18n="viz.badge">Ilustrativo</span>
+              </div>
+              <div class="viz-illustration" aria-hidden="true">
+                <svg class="viz-illustration-svg" viewBox="0 0 360 140" fill="none" preserveAspectRatio="xMidYMid meet">
+                  <rect class="hi-bubble" x="20" y="12" width="320" height="86" rx="16" />
+                  <g class="hi2-links" stroke-width="1.6">
+                    <line class="hi2-link" x1="55" y1="85" x2="135" y2="65" />
+                    <line class="hi2-link" x1="55" y1="45" x2="135" y2="65" />
+                    <line class="hi2-link" x1="90" y1="65" x2="135" y2="65" />
+                  </g>
+                  <g class="hi2-nodes">
+                    <circle class="hi2-node hi2-node-1" cx="55" cy="85" r="5" />
+                    <circle class="hi2-node hi2-node-2" cx="55" cy="45" r="5" />
+                    <circle class="hi2-node hi2-node-3" cx="90" cy="65" r="5" />
+                    <circle class="hi2-node hi2-node-4" cx="135" cy="65" r="7" />
+                  </g>
+                  <polygon class="hi2-confidence-band" points="230,50 270,25 310,35 335,18 335,50 310,65 270,52 230,66" />
+                  <polyline class="hi2-history" points="135,65 200,50 230,58" />
+                  <polyline class="hi2-forecast-dash" points="230,58 270,38 310,50 335,34" />
+                </svg>
+              </div>
+              <div class="viz-kpi-row" aria-hidden="true">
+                <div class="viz-kpi">
+                  <div class="viz-kpi-value"><span class="viz-kpi-num" data-target="94" data-suffix="%">0</span></div>
+                  <div class="viz-kpi-label" data-i18n="services.ml.viz.kpi1">Precisión del modelo</div>
+                </div>
+                <div class="viz-kpi">
+                  <div class="viz-kpi-value"><span class="viz-kpi-num" data-target="18">0</span></div>
+                  <div class="viz-kpi-label" data-i18n="services.ml.viz.kpi2">Variables analizadas</div>
+                </div>
+                <div class="viz-kpi">
+                  <div class="viz-kpi-value">-<span class="viz-kpi-num" data-target="35" data-suffix="%">0</span></div>
+                  <div class="viz-kpi-label" data-i18n="services.ml.viz.kpi3">Menos error de pronóstico</div>
+                </div>
+              </div>
+              <h3 data-i18n="services.ml.title">Modelos predictivos</h3>
+              <p data-i18n="services.ml.desc">
+                Modelos de machine learning, redes neuronales, econometría y estadística
+                para anticipar riesgos, demanda y comportamientos antes de que ocurran.
+              </p>
             </div>
-            <h3 data-i18n="services.ml.title">Modelos predictivos</h3>
-            <p data-i18n="services.ml.desc">
-              Modelos de machine learning, redes neuronales, econometría y estadística
-              para anticipar riesgos, demanda y comportamientos antes de que ocurran.
-            </p>
           </div>
-          <div class="card">
-            <div class="card-icon">
-              <svg class="icon-anim icon-chat" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-4 4v-4H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" />
-                <circle class="dot dot-1" cx="8" cy="10.5" r="1.1" fill="currentColor" stroke="none" />
-                <circle class="dot dot-2" cx="12" cy="10.5" r="1.1" fill="currentColor" stroke="none" />
-                <circle class="dot dot-3" cx="16" cy="10.5" r="1.1" fill="currentColor" stroke="none" />
-              </svg>
+
+          <div class="viz-stage">
+            <div class="viz-card">
+              <div class="viz-head" aria-hidden="true">
+                <span class="viz-label" data-i18n="services.ai.viz.label">Conversación en vivo</span>
+                <span class="viz-badge" data-i18n="viz.badge">Ilustrativo</span>
+              </div>
+              <div class="viz-illustration" aria-hidden="true">
+                <svg class="viz-illustration-svg" viewBox="0 0 360 140" fill="none" preserveAspectRatio="xMidYMid meet">
+                  <rect class="hi-bubble" x="20" y="12" width="320" height="86" rx="16" />
+                  <path class="hi3-spark" d="M300 12 L303 20 L311 23 L303 26 L300 34 L297 26 L289 23 L297 20 Z" />
+                  <path class="hi3-bubble-a-tail" d="M55 68 L42 84 L70 70 Z" />
+                  <rect class="hi3-bubble-a" x="30" y="24" width="150" height="44" rx="16" />
+                  <g class="hi3-dots">
+                    <circle class="hi3-dot hi3-dot-1" cx="60" cy="46" r="4.5" />
+                    <circle class="hi3-dot hi3-dot-2" cx="85" cy="46" r="4.5" />
+                    <circle class="hi3-dot hi3-dot-3" cx="110" cy="46" r="4.5" />
+                  </g>
+                  <rect class="hi3-bubble-b" x="170" y="58" width="150" height="36" rx="16" />
+                  <rect class="hi3-reply-line" x="186" y="70" width="70" height="6" rx="3" />
+                  <rect class="hi3-reply-line" x="186" y="82" width="42" height="6" rx="3" />
+                </svg>
+              </div>
+              <div class="viz-kpi-row" aria-hidden="true">
+                <div class="viz-kpi">
+                  <div class="viz-kpi-value"><span class="viz-kpi-num" data-target="87" data-suffix="%">0</span></div>
+                  <div class="viz-kpi-label" data-i18n="services.ai.viz.kpi1">Consultas resueltas</div>
+                </div>
+                <div class="viz-kpi">
+                  <div class="viz-kpi-value"><span class="viz-kpi-num" data-target="2" data-suffix="s">0</span></div>
+                  <div class="viz-kpi-label" data-i18n="services.ai.viz.kpi2">Tiempo de respuesta</div>
+                </div>
+                <div class="viz-kpi">
+                  <div class="viz-kpi-value"><span class="viz-kpi-num" data-target="24" data-suffix="/7">0</span></div>
+                  <div class="viz-kpi-label" data-i18n="services.ai.viz.kpi3">Disponibilidad</div>
+                </div>
+              </div>
+              <h3 data-i18n="services.ai.title">Potenciado por IA</h3>
+              <p data-i18n="services.ai.desc">
+                Chatbots, agentes y automatizaciones con inteligencia artificial que
+                agilizan procesos, resuelven consultas y estructuran información para tu equipo.
+              </p>
             </div>
-            <h3 data-i18n="services.ai.title">Potenciado por IA</h3>
-            <p data-i18n="services.ai.desc">
-              Chatbots, agentes y automatizaciones con inteligencia artificial que
-              agilizan procesos, resuelven consultas y estructuran información para tu equipo.
-            </p>
           </div>
         </div>
       </div>

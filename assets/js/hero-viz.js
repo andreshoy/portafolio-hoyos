@@ -1,10 +1,11 @@
-// Efectos decorativos del hero: contador animado de KPIs y tilt 3D de la
-// tarjeta al pasar el mouse. El contenedor lleva aria-hidden — el texto del
-// hero ya transmite el mensaje principal.
+// Efectos decorativos de los paneles visuales (hero + tarjetas de servicio):
+// contador animado de KPIs y tilt 3D de la tarjeta al pasar el mouse. Cada
+// panel decorativo lleva aria-hidden — el texto que lo acompaña ya transmite
+// el mensaje principal.
 (function () {
   function animateKpis() {
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    document.querySelectorAll('.hero-kpi-num').forEach(function (numEl) {
+    document.querySelectorAll('.viz-kpi-num').forEach(function (numEl) {
       var target = parseFloat(numEl.getAttribute('data-target')) || 0;
       var suffix = numEl.getAttribute('data-suffix') || '';
       if (reduce) { numEl.textContent = target + suffix; return; }
@@ -24,19 +25,21 @@
   function initTilt() {
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var hoverCapable = window.matchMedia && window.matchMedia('(hover: hover)').matches;
-    var stage = document.getElementById('hero-visual');
-    var card = document.getElementById('hero-visual-card');
-    if (!stage || !card || reduce || !hoverCapable) return;
+    if (reduce || !hoverCapable) return;
 
     var maxDeg = 6;
-    stage.addEventListener('pointermove', function (evt) {
-      var r = stage.getBoundingClientRect();
-      var px = (evt.clientX - r.left) / r.width - 0.5;
-      var py = (evt.clientY - r.top) / r.height - 0.5;
-      card.style.transform = 'rotateY(' + (px * maxDeg * 2) + 'deg) rotateX(' + (-py * maxDeg * 2) + 'deg)';
-    });
-    stage.addEventListener('pointerleave', function () {
-      card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    document.querySelectorAll('.viz-stage').forEach(function (stage) {
+      var card = stage.querySelector('.viz-card');
+      if (!card) return;
+      stage.addEventListener('pointermove', function (evt) {
+        var r = stage.getBoundingClientRect();
+        var px = (evt.clientX - r.left) / r.width - 0.5;
+        var py = (evt.clientY - r.top) / r.height - 0.5;
+        card.style.transform = 'rotateY(' + (px * maxDeg * 2) + 'deg) rotateX(' + (-py * maxDeg * 2) + 'deg)';
+      });
+      stage.addEventListener('pointerleave', function () {
+        card.style.transform = 'rotateY(0deg) rotateX(0deg)';
+      });
     });
   }
 
