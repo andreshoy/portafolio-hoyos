@@ -5,3 +5,8 @@ __pycache__/
 venv/
 node_modules/
 .wrangler/
+
+# Insumos crudos del demo comparativo-medicamentos (se procesan con build_data.py;
+# solo se versionan data/catalogo.json y data/series/*.json).
+demos/comparativo-medicamentos/data/consolidado.parquet
+demos/comparativo-medicamentos/data/*.xlsx

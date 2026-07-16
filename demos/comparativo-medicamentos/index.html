@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="meta.comparativo.title">Comparativo de precios de medicamentos — Andrés Hoyos</title>
+  <meta name="description" content="Demo: comparación de precios estandarizados entre marcas y presentaciones de un mismo principio activo, con datos públicos de SISPRO (Colombia)." />
+  <script>
+    document.documentElement.setAttribute(
+      'data-bs-theme',
+      window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    );
+  </script>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    .container-demo {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+    .card-surface {
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+    }
+    .chart-card h5 { color: var(--text-primary); }
+    .chart-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+    #tabla-comparativo th, #tabla-comparativo td { font-variant-numeric: tabular-nums; }
+    #panel-mensaje, #panel-carga { color: var(--text-muted); }
+    .demo-note {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 24px;
+    }
+    .serie-swatch {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .up-bad { color: var(--status-critical); }
+    .down-good { color: var(--status-good); }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="nav">
+      <a class="nav-brand" href="/" data-i18n="nav.brand">Andrés Hoyos</a>
+      <button class="nav-toggle" aria-label="Abrir menú">☰</button>
+      <ul class="nav-links">
+        <li><a href="/#servicios" data-i18n="nav.servicios">Servicios</a></li>
+        <li><a href="/#demos" data-i18n="nav.demos">Demos</a></li>
+        <li><a href="/cv/" data-i18n="nav.cv">Hoja de vida</a></li>
+        <li><a href="/#contacto" data-i18n="nav.contacto">Contacto</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="lang-switch" role="group" aria-label="Idioma / Language">
+          <button type="button" class="lang-opt" data-lang="es" aria-label="Español">
+            <span class="flag" aria-hidden="true">🇨🇴</span><span>ES</span>
+          </button>
+          <button type="button" class="lang-opt" data-lang="en" aria-label="English">
+            <span class="flag" aria-hidden="true">🇺🇸</span><span>EN</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="demo-shell">
+    <div class="container-demo">
+      <div class="demo-header">
+        <span class="tag" data-i18n="demos.comparativo.tag">Comparativo</span>
+        <h1 data-i18n="demos.comparativo.title">Comparativo de precios de medicamentos</h1>
+        <p data-i18n="demos.comparativo.page.lede">
+          Compara el precio estandarizado (precio ÷ contenido total de la presentación, ej. $/UI o $/mg)
+          entre marcas y presentaciones de un mismo principio activo, a partir del histórico de precios
+          reportados en SISPRO (Colombia).
+        </p>
+      </div>
+
+      <p class="demo-note" data-i18n-html="demos.comparativo.note"></p>
+
+      <p id="panel-carga" data-i18n="demos.comparativo.page.cargando">Cargando catálogo de principios activos…</p>
+
+      <div id="panel-selector" class="d-none">
+        <div class="mb-3">
+          <label for="principio-activo" class="form-label" data-i18n="demos.comparativo.page.label.principio">Principio activo:</label>
+          <select id="principio-activo" class="form-select" style="width: 100%">
+            <option value="" data-i18n="demos.comparativo.page.placeholder.principio">Seleccione un principio activo</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label for="marcas" class="form-label" data-i18n="demos.comparativo.page.label.marcas">Marcas / presentaciones a comparar (máx. 8):</label>
+          <select id="marcas" class="form-select" style="width: 100%" multiple disabled></select>
+        </div>
+      </div>
+
+      <div id="panel-filtros" class="d-none">
+        <div class="row g-3 mb-3" id="filtros-row">
+          <div class="col-12 col-md-4">
+            <label class="form-label" data-i18n="demos.comparativo.page.filtro.rol">Rol actor reportante</label>
+            <select id="filtro-rol" class="form-select" multiple></select>
+          </div>
+          <div class="col-12 col-md-4">
+            <label class="form-label" data-i18n="demos.comparativo.page.filtro.operacion">Tipo de operación</label>
+            <select id="filtro-operacion" class="form-select" multiple></select>
+          </div>
+          <div class="col-12 col-md-4">
+            <label class="form-label" data-i18n="demos.comparativo.page.filtro.transaccion">Tipo de transacción</label>
+            <select id="filtro-transaccion" class="form-select" multiple></select>
+          </div>
+        </div>
+        <p class="chart-sub" data-i18n="demos.comparativo.page.filtro.unidadNota">El precio estandarizado siempre se calcula sobre la unidad de factura "Presentación comercial" (la caja/kit completo); es la única base compatible con el contenido total usado para estandarizar.</p>
+      </div>
+
+      <div id="panel-resultados" class="d-none">
+        <div class="card-surface chart-card mb-4">
+          <h5 data-i18n="demos.comparativo.page.chart.titulo">Precio estandarizado en el tiempo</h5>
+          <div class="chart-sub" data-i18n="demos.comparativo.page.chart.sub">Mensual desde octubre de 2019; trimestral antes de esa fecha.</div>
+          <canvas id="chart-comparativo" height="110"></canvas>
+        </div>
+
+        <div class="card-surface chart-card mb-4">
+          <h5 data-i18n="demos.comparativo.page.tabla.titulo">Resumen por marca / presentación</h5>
+          <div class="table-responsive">
+            <table class="table table-sm table-striped mb-0" id="tabla-comparativo">
+              <thead>
+                <tr>
+                  <th data-i18n="demos.comparativo.page.tabla.col.marca">Marca / presentación</th>
+                  <th data-i18n="demos.comparativo.page.tabla.col.unidad">Unidad</th>
+                  <th data-i18n="demos.comparativo.page.tabla.col.ultimo">Último precio estandarizado</th>
+                  <th data-i18n="demos.comparativo.page.tabla.col.minimo">Mínimo histórico</th>
+                  <th data-i18n="demos.comparativo.page.tabla.col.maximo">Máximo histórico</th>
+                  <th data-i18n="demos.comparativo.page.tabla.col.variacion">Variación</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <p id="panel-mensaje" class="d-none" data-i18n="demos.comparativo.page.msg.sinDatos">No se encontraron datos para la selección.</p>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>&copy; <span data-year></span> Andrés Hoyos. <span data-i18n="footer.rights">Todos los derechos reservados.</span></span>
+      <span data-i18n="footer.built">Sitio construido con HTML, CSS y JS puro.</span>
+    </div>
+  </footer>
+
+  <script src="/assets/js/main.js"></script>
+  <script src="/assets/js/i18n.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
