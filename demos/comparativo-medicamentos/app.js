@@ -1,7 +1,8 @@
 // Comparativo de precios estandarizados entre marcas/presentaciones de un mismo
-// principio activo. Cruce de data/Archivo para prueba contenido.xlsx (catálogo de
-// homologados) con data/consolidado.parquet (histórico SISPRO), preprocesado por
-// build_data.py en data/catalogo.json + data/series/{no_expediente}.json.
+// principio activo. Cruce de data/cum_estandarizado.parquet (catálogo INVIMA de
+// homologados, recortado a una muestra chica) con data/consolidado.parquet
+// (histórico SISPRO), preprocesado por build_data.py en data/catalogo.json +
+// data/series/{no_expediente}.json.
 
 var STR = {
     es: {
@@ -12,6 +13,11 @@ var STR = {
         limiteMarcas: 'Máximo 8 presentaciones por comparación',
         filtroTodos: 'Todos',
         sinDatosSeleccion: 'No se encontraron datos para la selección.',
+        tablaSinDatosAnio: 'Ninguna de las presentaciones seleccionadas tiene datos de 2025.',
+        histogramaFrecuencia: 'Cantidad de datos',
+        histogramaEjeX: 'Precio estandarizado',
+        histogramaEjeY: 'Cantidad de datos',
+        histogramaMediana: 'Mediana',
         errorCatalogo: function (msg) { return 'Error al cargar el catálogo (' + msg + '). Recarga la página.'; },
         errorHistorico: function (msg) { return 'Error al cargar el histórico (' + msg + ').'; }
     },
@@ -23,6 +29,11 @@ var STR = {
         limiteMarcas: 'Maximum 8 presentations per comparison',
         filtroTodos: 'All',
         sinDatosSeleccion: 'No data found for this selection.',
+        tablaSinDatosAnio: 'None of the selected presentations have 2025 data.',
+        histogramaFrecuencia: 'Number of data points',
+        histogramaEjeX: 'Standardized price',
+        histogramaEjeY: 'Number of data points',
+        histogramaMediana: 'Median',
         errorCatalogo: function (msg) { return 'Error loading the catalog (' + msg + '). Reload the page.'; },
         errorHistorico: function (msg) { return 'Error loading the history (' + msg + ').'; }
     }
@@ -86,32 +97,30 @@ function codigosActuales() {
 // Índices posicionales de cada fila en data/series/{no_expediente}.json
 var COL = { consecutivo: 0, anio: 1, mes: 2, rol: 3, operacion: 4, transaccion: 5, unidades: 6, valor: 7 };
 
-// Paleta categórica fija (dataviz skill / references/palette.md) — se asigna en
-// orden fijo por posición de selección, nunca por valor de los datos.
+// Tabla de resumen e histograma se calculan solo sobre este año: el último año
+// calendario completo disponible en consolidado.parquet (ver seleccionar_muestra.py).
+var ANIO_REFERENCIA = 2025;
+
+// Paleta categórica fija (dataviz skill / references/palette.md, variante clara
+// — el sitio no tiene modo oscuro) — se asigna en orden fijo por posición de
+// selección, nunca por valor de los datos.
 var PALETA_CATEGORICA = [
-    { light: '#2a78d6', dark: '#3987e5' }, // blue
-    { light: '#008300', dark: '#008300' }, // green
-    { light: '#e87ba4', dark: '#d55181' }, // magenta
-    { light: '#eda100', dark: '#c98500' }, // yellow
-    { light: '#1baf7a', dark: '#199e70' }, // aqua
-    { light: '#eb6834', dark: '#d95926' }, // orange
-    { light: '#4a3aa7', dark: '#9085e9' }, // violet
-    { light: '#e34948', dark: '#e66767' }  // red
+    '#2a78d6', // blue
+    '#008300', // green
+    '#e87ba4', // magenta
+    '#eda100', // yellow
+    '#1baf7a', // aqua
+    '#eb6834', // orange
+    '#4a3aa7', // violet
+    '#e34948'  // red
 ];
 
-function modoOscuro() {
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-}
-
 function colorSerie(indice) {
-    var slot = PALETA_CATEGORICA[indice % PALETA_CATEGORICA.length];
-    return modoOscuro() ? slot.dark : slot.light;
+    return PALETA_CATEGORICA[indice % PALETA_CATEGORICA.length];
 }
 
 function paletaChrome() {
-    return modoOscuro()
-        ? { grid: '#2c2c2a', tick: '#c3c2b7' }
-        : { grid: '#e1e0d9', tick: '#52514e' };
+    return { grid: '#e1e0d9', tick: '#52514e' };
 }
 
 var catalogo = [];
@@ -122,6 +131,7 @@ var cacheSeries = new Map();    // no_expediente -> filas crudas del archivo (CO
 var filasPorEntrada = new Map(); // "no_expediente|consecutivo" -> filas crudas de esa presentación (sin filtrar)
 var seleccionActual = [];       // entradas de catálogo actualmente elegidas en #marcas
 var chart = null;
+var histograma = null;
 
 $(document).ready(function () {
     var i18nReady = (window.portafolioI18n && window.portafolioI18n.ready) || Promise.resolve();
@@ -143,6 +153,15 @@ $(document).ready(function () {
                 $('#panel-carga').addClass('d-none');
                 $('#panel-selector').removeClass('d-none');
                 inicializarSelectores();
+
+                // Ejemplo por defecto: molécula con más marcas y mejor histórico
+                // de precios de la muestra (ver PRINCIPIOS_MUESTRA en build_data.py),
+                // para que el primer pantallazo muestre la gráfica con datos en vez
+                // del estado vacío.
+                var PRINCIPIO_DEFECTO = 'NIFUROXAZIDA';
+                if (porPrincipio.has(PRINCIPIO_DEFECTO)) {
+                    $('#principio-activo').val(PRINCIPIO_DEFECTO).trigger('change');
+                }
             })
             .catch(function (err) {
                 $('#panel-carga').text(t('errorCatalogo')(err.message));
@@ -293,6 +312,7 @@ function nuevaOpcion(valor, texto) {
 function ocultarResultados() {
     $('#panel-filtros').addClass('d-none');
     $('#panel-resultados').addClass('d-none');
+    $('#panel-histograma').addClass('d-none');
     $('#panel-mensaje').addClass('d-none');
 }
 
@@ -410,6 +430,7 @@ function cargarSeleccion(valores) {
         .catch(function (err) {
             $('#panel-filtros').addClass('d-none');
             $('#panel-resultados').addClass('d-none');
+            $('#panel-histograma').addClass('d-none');
             $('#panel-mensaje').removeClass('d-none').text(t('errorHistorico')(err.message));
         });
 }
@@ -423,6 +444,7 @@ function recalcularYRenderizar() {
 
     if (!series.length) {
         $('#panel-resultados').addClass('d-none');
+        $('#panel-histograma').addClass('d-none');
         $('#panel-mensaje').removeClass('d-none').text(t('sinDatosSeleccion'));
         return;
     }
@@ -431,6 +453,7 @@ function recalcularYRenderizar() {
 
     renderChart(series);
     renderTabla(series);
+    renderHistograma(series);
 }
 
 // --- Gráfica ---------------------------------------------------------------------
@@ -495,9 +518,15 @@ function renderChart(series) {
 function renderTabla(series) {
     var $tbody = $('#tabla-comparativo tbody');
     $tbody.empty();
+    var filasEscritas = 0;
 
     series.forEach(function (s, i) {
-        var puntos = s.puntos;
+        // Solo ANIO_REFERENCIA (ver comentario en la declaración): último/mínimo/
+        // máximo/variación de esta tabla no son históricos, son de ese año.
+        var puntos = s.puntos.filter(function (p) { return p.anio === ANIO_REFERENCIA; });
+        if (!puntos.length) return;
+        filasEscritas++;
+
         var primero = puntos[0], ultimo = puntos[puntos.length - 1];
         var precios = puntos.map(function (p) { return p.precio; });
         var minimo = Math.min.apply(null, precios);
@@ -536,6 +565,162 @@ function renderTabla(series) {
         tr.appendChild(tdVar);
 
         $tbody.append(tr);
+    });
+
+    if (!filasEscritas) {
+        var trVacio = document.createElement('tr');
+        var tdVacio = document.createElement('td');
+        tdVacio.colSpan = 6;
+        tdVacio.className = 'text-muted';
+        tdVacio.textContent = t('tablaSinDatosAnio');
+        trVacio.appendChild(tdVacio);
+        $tbody.append(trVacio);
+    }
+}
+
+// --- Histograma de precios (ANIO_REFERENCIA) --------------------------------------
+
+// Percentil por interpolación lineal sobre un arreglo ya ordenado (método usado
+// por Excel/NumPy "linear"), consistente con lo que se muestra en las líneas de
+// referencia del histograma.
+function percentil(valoresOrdenados, p) {
+    var n = valoresOrdenados.length;
+    if (!n) return null;
+    if (n === 1) return valoresOrdenados[0];
+    var idx = (p / 100) * (n - 1);
+    var lo = Math.floor(idx), hi = Math.ceil(idx);
+    if (lo === hi) return valoresOrdenados[lo];
+    return valoresOrdenados[lo] + (valoresOrdenados[hi] - valoresOrdenados[lo]) * (idx - lo);
+}
+
+// Intervalos de ancho fijo entre el precio mínimo y máximo redondeados hacia
+// afuera (ej. 2,5 y 7,8 -> intervalos entre 2 y 8), para que los límites del
+// eje sean números redondos en vez de decimales del dato. Cantidad de
+// intervalos por la regla de la raíz cuadrada (razonable para las muestras
+// chicas típicas de esta vista, tras agrupar a un punto por mes), acotada a
+// [5,20] para que el histograma no quede ni vacío de detalle ni sobre-particionado.
+function construirHistograma(valores) {
+    var minVal = Math.min.apply(null, valores);
+    var maxVal = Math.max.apply(null, valores);
+    if (!(maxVal > 0)) return null;
+    var desde = Math.floor(minVal);
+    var hasta = Math.ceil(maxVal);
+    if (hasta <= desde) hasta = desde + 1;
+
+    var k = Math.min(20, Math.max(5, Math.ceil(Math.sqrt(valores.length))));
+    var ancho = (hasta - desde) / k;
+    var conteos = new Array(k).fill(0);
+    valores.forEach(function (v) {
+        var idx = Math.min(k - 1, Math.max(0, Math.floor((v - desde) / ancho)));
+        conteos[idx]++;
+    });
+    return { k: k, ancho: ancho, desde: desde, hasta: hasta, conteos: conteos };
+}
+
+function lineaReferencia(valor, etiqueta, color, yAdjust) {
+    return {
+        type: 'line',
+        xMin: valor,
+        xMax: valor,
+        borderColor: color,
+        borderWidth: 2,
+        borderDash: [6, 4],
+        label: {
+            display: true,
+            content: etiqueta + ': ' + formatoPesosDecimal(valor),
+            position: 'end',
+            yAdjust: yAdjust,
+            color: '#fff',
+            backgroundColor: color,
+            padding: 4,
+            font: { size: 11 }
+        }
+    };
+}
+
+// Junta los precios 2025 de todas las series (para las barras) y, por
+// separado, la mediana 2025 de cada una (para las líneas de referencia, una
+// por expediente+presentación en vez de una sola mediana/P25/P75 agregada).
+function renderHistograma(series) {
+    if (histograma) { histograma.destroy(); histograma = null; }
+
+    var valoresPool = [];
+    var medianasPorSerie = [];
+    series.forEach(function (s, i) {
+        var precios = s.puntos
+            .filter(function (p) { return p.anio === ANIO_REFERENCIA; })
+            .map(function (p) { return p.precio; })
+            .sort(function (a, b) { return a - b; });
+        if (!precios.length) return;
+        valoresPool = valoresPool.concat(precios);
+        medianasPorSerie.push({ entrada: s.entrada, color: colorSerie(i), mediana: percentil(precios, 50) });
+    });
+
+    var h = valoresPool.length >= 2 ? construirHistograma(valoresPool) : null;
+    if (!h) {
+        $('#panel-histograma').addClass('d-none');
+        return;
+    }
+    $('#panel-histograma').removeClass('d-none');
+
+    var barras = [];
+    for (var i = 0; i < h.k; i++) {
+        barras.push({ x: h.desde + (i + 0.5) * h.ancho, y: h.conteos[i] });
+    }
+
+    var anotaciones = {};
+    medianasPorSerie.forEach(function (m, idx) {
+        var etiqueta = t('histogramaMediana') + ' ' + m.entrada.nombre;
+        anotaciones['mediana' + idx] = lineaReferencia(m.mediana, etiqueta, m.color, 10 + idx * 18);
+    });
+
+    var chrome = paletaChrome();
+    var ctx = document.getElementById('chart-histograma').getContext('2d');
+
+    histograma = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            datasets: [{
+                label: t('histogramaFrecuencia'),
+                data: barras,
+                backgroundColor: PALETA_CATEGORICA[0],
+                barPercentage: 1,
+                categoryPercentage: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        title: function (items) {
+                            var centro = items[0].parsed.x;
+                            var mitad = h.ancho / 2;
+                            return formatoPesosDecimal(centro - mitad) + ' – ' + formatoPesosDecimal(centro + mitad);
+                        },
+                        label: function (item) { return t('histogramaFrecuencia') + ': ' + item.parsed.y; }
+                    }
+                },
+                annotation: { annotations: anotaciones }
+            },
+            scales: {
+                x: {
+                    type: 'linear',
+                    min: h.desde,
+                    max: h.hasta,
+                    grid: { display: false },
+                    ticks: { color: chrome.tick, callback: function (v) { return formatoPesosDecimal(v); } },
+                    title: { display: true, text: t('histogramaEjeX'), color: chrome.tick }
+                },
+                y: {
+                    beginAtZero: true,
+                    grid: { color: chrome.grid },
+                    ticks: { color: chrome.tick, precision: 0 },
+                    title: { display: true, text: t('histogramaEjeY'), color: chrome.tick }
+                }
+            }
+        }
     });
 }
 
