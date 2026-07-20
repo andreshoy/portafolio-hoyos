@@ -277,6 +277,12 @@ a:hover { text-decoration: underline; }
   gap: 2rem;
 }
 
+/* Override the global site's generic section padding (64px 0),
+   which otherwise bleeds into the resume and adds huge gaps. */
+.page section {
+  padding: 0;
+}
+
 /* Section headings */
 .section-heading {
   font-size: 0.72rem;
