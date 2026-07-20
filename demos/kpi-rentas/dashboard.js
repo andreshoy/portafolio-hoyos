@@ -179,7 +179,17 @@ document.addEventListener('i18n:applied', function () {
   if (datosTablero) renderTablero(datosTablero);
 });
 
+var mobileAlUltimoRender = null;
+var resizeTimer = null;
+window.addEventListener('resize', function () {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(function () {
+    if (datosTablero && esMobile() !== mobileAlUltimoRender) renderTablero(datosTablero);
+  }, 200);
+});
+
 function renderTablero(D) {
+  mobileAlUltimoRender = esMobile();
   document.getElementById('fecha-actualizacion').textContent = D.actualizacion;
   document.getElementById('total-titulos-sub').textContent = fmtNum(D.total_registros);
 
@@ -248,6 +258,10 @@ function renderKpisInconsistencias(D) {
   ]);
 }
 
+function esMobile() {
+  return window.innerWidth < 640;
+}
+
 function destruir(clave) {
   if (charts[clave]) { charts[clave].destroy(); charts[clave] = null; }
 }
@@ -278,7 +292,7 @@ function renderChartEstado(porEstado) {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { position: 'right', labels: { color: p.tick, usePointStyle: true } },
+        legend: { position: esMobile() ? 'bottom' : 'right', labels: { color: p.tick, usePointStyle: true } },
         tooltip: {
           callbacks: {
             label: function (item) {
@@ -364,7 +378,7 @@ function renderChartHorizontal(canvasId, filas, campoNombre, color) {
       },
       scales: {
         x: ejeY(p, function (v) { return fmtNum(v); }),
-        y: { grid: { display: false }, ticks: { color: p.tick, font: { size: 11 } } },
+        y: { grid: { display: false }, ticks: { color: p.tick, font: { size: esMobile() ? 10 : 11 } } },
       },
     },
   });
