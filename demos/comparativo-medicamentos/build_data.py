@@ -25,6 +25,16 @@ o consolidado.parquet cambian.
 
 Se cruzan ambos archivos por (expedientecum/consecutivocum, NoExpediente/PresentacionComercial).
 
+Tras el cruce, cada fila de consolidado.parquet recibe una columna
+"cantidad_total_facturada" = cantidad × cantidad_cum (de cum_estandarizado.parquet,
+ya combinadas en cantidad_total_presentacion) × TotalUnidadesFacturadas (de
+consolidado.parquet) — la cantidad total de principio activo efectivamente
+facturada en esa fila (ej. mg o UI). Sumando valor y cantidad_total_facturada sobre
+cualquier subconjunto de filas (una marca, un principio activo completo, un rango
+de meses) se obtiene su precio promedio estandarizado (valor/cantidad_total_facturada)
+sin promediar precios ya divididos. Por eso las filas se despachan sin agregar por
+mes/dimensión: el cliente decide sobre qué subconjunto sumar.
+
 Requiere: pandas, pyarrow (pip install pandas pyarrow).
 """
 
@@ -147,9 +157,19 @@ def main():
 
     # Filas sin unidades ni valor facturado no aportan nada al precio estandarizado
     # (ni al numerador ni al denominador) y solo son ruido en las series de salida.
+    # fillna(0) antes de comparar: NaN != 0 da True en pandas, así que sin el
+    # fillna una fila con ambos campos vacíos (NaN, NaN) pasaría el filtro en vez
+    # de descartarse.
     antes = len(df)
-    df = df[(df["unidades"] != 0) | (df["valor"] != 0)]
+    df = df[(df["unidades"].fillna(0) != 0) | (df["valor"].fillna(0) != 0)]
     print(f"Filas descartadas por unidades=0 y valor=0: {antes - len(df)}")
+
+    # valor no puede quedar NaN en la salida: NaN no es un literal JSON válido y
+    # rompe el JSON.parse del cliente. Filas con ValorTotalFacturado no parseable
+    # como número no aportan nada al precio estandarizado (ni al numerador).
+    antes = len(df)
+    df = df.dropna(subset=["valor"])
+    print(f"Filas descartadas por ValorTotalFacturado no numérico: {antes - len(df)}")
 
     # --- Datos atípicos por (expediente, presentación) -----------------------------
     # Precio por fila = valor / unidades (antes de agregar por período). Dentro de
@@ -178,21 +198,28 @@ def main():
     print(f"Filas descartadas por precio atípico (Tukey, dentro de expediente+presentación): {int(es_atipico.sum())}")
     df = df[~es_atipico].drop(columns=["precio_fila", "lo", "hi", "n"])
 
-    # Agregado por (expediente, presentación, año, mes, rol, operación, transacción):
-    # suma de unidades y valor. Se conservan estas 3 dimensiones (igual que
-    # buscador-medicamentos) para poder filtrar en el cliente sin perder la
-    # posibilidad de recalcular el precio estandarizado sumando valor/unidades del
-    # subconjunto filtrado (no promediando precios ya divididos).
-    agregado = (
-        df.groupby(
-            ["NoExpediente", "PresentacionComercial", "anio", "mes",
-             "CodRolActorReportante", "CodTipoOperacion", "CodTipoTransaccion"],
-            as_index=False,
-        )
-        .agg(unidades=("unidades", "sum"), valor=("valor", "sum"))
+    # --- cantidad_total_facturada ---------------------------------------------------
+    # cantidad_total_presentacion (calculada en cargar_catalogo() como cantidadcum ×
+    # cantidad, ambas de cum_estandarizado.parquet) es constante por presentación:
+    # el contenido de principio activo de una unidad de venta completa (ej. una caja
+    # de 5 plumas de 100 UI = 500 UI). Al multiplicarla por TotalUnidadesFacturadas
+    # (unidades de esa presentación facturadas en la fila) se obtiene la cantidad
+    # total de principio activo facturada en esa fila.
+    mapa_cantidad = (
+        catalogo[["no_expediente", "consecutivo", "cantidad_total_presentacion"]]
+        .drop_duplicates(subset=["no_expediente", "consecutivo"])
+        .rename(columns={"no_expediente": "NoExpediente", "consecutivo": "PresentacionComercial"})
     )
+    df = df.merge(mapa_cantidad, on=["NoExpediente", "PresentacionComercial"], how="left")
+    df["cantidad_total_facturada"] = df["cantidad_total_presentacion"] * df["unidades"]
 
-    claves_con_datos = set(zip(agregado["NoExpediente"], agregado["PresentacionComercial"]))
+    # No se agrega por mes/dimensión: se despachan las filas ya filtradas (sin
+    # atípicos) tal cual llegan de consolidado.parquet. Así el cliente puede sumar
+    # valor y cantidad_total_facturada sobre cualquier combinación de meses/marcas/
+    # filtros que elija (precio promedio estandarizado de ese subconjunto) y, aparte,
+    # calcular percentiles de precio a nivel de línea de factura — antes de que una
+    # agregación mensual los mezclara.
+    claves_con_datos = set(zip(df["NoExpediente"], df["PresentacionComercial"]))
     catalogo["tiene_historico"] = list(
         zip(catalogo["no_expediente"], catalogo["consecutivo"])
     )
@@ -231,16 +258,16 @@ def main():
         archivo_viejo.unlink()
 
     total_filas_series = 0
-    for no_expediente, grupo in agregado.groupby("NoExpediente"):
+    for no_expediente, grupo in df.groupby("NoExpediente"):
         filas = grupo.sort_values(["PresentacionComercial", "anio", "mes"])[
             ["PresentacionComercial", "anio", "mes",
              "CodRolActorReportante", "CodTipoOperacion", "CodTipoTransaccion",
-             "unidades", "valor"]
+             "valor", "cantidad_total_facturada"]
         ].values.tolist()
         filas = [
             [pc, int(anio), int(mes), rol, operacion, transaccion,
-             round(float(unidades), 2), round(float(valor), 2)]
-            for pc, anio, mes, rol, operacion, transaccion, unidades, valor in filas
+             round(float(valor), 2), (None if pd.isna(ctf) else round(float(ctf), 4))]
+            for pc, anio, mes, rol, operacion, transaccion, valor, ctf in filas
         ]
         total_filas_series += len(filas)
         with open(SERIES_DIR / f"{no_expediente}.json", "w", encoding="utf-8") as f:

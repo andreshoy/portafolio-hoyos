@@ -167,6 +167,8 @@
   "demos.comparativo.page.filtro.unidadNota": "The standardized price is always calculated on the \"Commercial presentation\" billing unit (the full box/kit); it's the only basis compatible with the total content used to standardize.",
   "demos.comparativo.page.chart.titulo": "Standardized price over time",
   "demos.comparativo.page.chart.sub": "Monthly since October 2019; quarterly before that date.",
+  "demos.comparativo.page.kpi.titulo": "KPIs 2025 vs. 2024 — current selection",
+  "demos.comparativo.page.kpi.sub": "Sum of value and cantidad_total_facturada for the brands/presentations selected above (after filters); not the whole active ingredient if the selection is partial.",
   "demos.comparativo.page.tabla.titulo": "Summary by brand / presentation",
   "demos.comparativo.page.tabla.col.marca": "Brand / presentation",
   "demos.comparativo.page.tabla.col.unidad": "Unit",

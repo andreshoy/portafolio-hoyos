@@ -18,6 +18,14 @@ var STR = {
         histogramaEjeX: 'Precio estandarizado',
         histogramaEjeY: 'Cantidad de datos',
         histogramaMediana: 'Mediana',
+        kpiCantidad: 'Cantidad total facturada 2025',
+        kpiValor: 'Valor total facturado 2025',
+        kpiPrecioPromedio: 'Precio promedio estandarizado 2025',
+        kpiP25: 'Percentil 25 (por línea de factura) 2025',
+        kpiP75: 'Percentil 75 (por línea de factura) 2025',
+        kpiDispersion: 'Dispersión de precio entre líneas 2025 (P75−P25 / promedio)',
+        kpiVs2024: 'vs. 2024',
+        kpiSin2024: 'sin datos 2024',
         errorCatalogo: function (msg) { return 'Error al cargar el catálogo (' + msg + '). Recarga la página.'; },
         errorHistorico: function (msg) { return 'Error al cargar el histórico (' + msg + ').'; }
     },
@@ -34,6 +42,14 @@ var STR = {
         histogramaEjeX: 'Standardized price',
         histogramaEjeY: 'Number of data points',
         histogramaMediana: 'Median',
+        kpiCantidad: 'Total invoiced quantity 2025',
+        kpiValor: 'Total invoiced value 2025',
+        kpiPrecioPromedio: 'Standardized average price 2025',
+        kpiP25: '25th percentile (per invoice line) 2025',
+        kpiP75: '75th percentile (per invoice line) 2025',
+        kpiDispersion: 'Price dispersion across lines 2025 (P75-P25 / average)',
+        kpiVs2024: 'vs. 2024',
+        kpiSin2024: 'no 2024 data',
         errorCatalogo: function (msg) { return 'Error loading the catalog (' + msg + '). Reload the page.'; },
         errorHistorico: function (msg) { return 'Error loading the history (' + msg + ').'; }
     }
@@ -94,8 +110,13 @@ function codigosActuales() {
     return CODIGOS_POR_IDIOMA[langActual()];
 }
 
-// Índices posicionales de cada fila en data/series/{no_expediente}.json
-var COL = { consecutivo: 0, anio: 1, mes: 2, rol: 3, operacion: 4, transaccion: 5, unidades: 6, valor: 7 };
+// Índices posicionales de cada fila en data/series/{no_expediente}.json. Cada fila
+// es una línea de factura de consolidado.parquet (no agregada por mes): valor y
+// cantidad_total_facturada (cantidad × cantidad_cum de cum_estandarizado.parquet ×
+// TotalUnidadesFacturadas de consolidado.parquet) se pueden sumar sobre cualquier
+// subconjunto de filas para obtener su precio promedio estandarizado
+// (valor/cantidad_total_facturada), sin promediar precios ya divididos.
+var COL = { consecutivo: 0, anio: 1, mes: 2, rol: 3, operacion: 4, transaccion: 5, valor: 6, cantidadTotalFacturada: 7 };
 
 // Tabla de resumen e histograma se calculan solo sobre este año: el último año
 // calendario completo disponible en consolidado.parquet (ver seleccionar_muestra.py).
@@ -313,6 +334,7 @@ function ocultarResultados() {
     $('#panel-filtros').addClass('d-none');
     $('#panel-resultados').addClass('d-none');
     $('#panel-histograma').addClass('d-none');
+    $('#panel-kpis').addClass('d-none');
     $('#panel-mensaje').addClass('d-none');
 }
 
@@ -383,28 +405,42 @@ function periodoLabel(anio, mes) {
     return anio + '-' + String(mes).padStart(2, '0');
 }
 
-// Agrega filas crudas (ya filtradas) por período sumando unidades/valor, y
-// solo entonces deriva el precio estandarizado — nunca se promedian precios
-// ya divididos.
+// Agrega filas crudas (ya filtradas) por período sumando valor/cantidad_total_facturada,
+// y solo entonces deriva el precio estandarizado — nunca se promedian precios ya
+// divididos.
 function serieEstandarizada(entrada, filasFiltradas) {
-    var grupos = new Map(); // clave de período -> { anio, mes, unidades, valor }
+    var grupos = new Map(); // clave de período -> { anio, mes, cantidadTotalFacturada, valor }
     filasFiltradas.forEach(function (fila) {
         var anio = fila[COL.anio], mes = fila[COL.mes];
         var clave = anio * 12 + (mes - 1); // mes en base 0 para invertir sin ambigüedad
-        if (!grupos.has(clave)) grupos.set(clave, { anio: anio, mes: mes, unidades: 0, valor: 0 });
+        if (!grupos.has(clave)) grupos.set(clave, { anio: anio, mes: mes, cantidadTotalFacturada: 0, valor: 0 });
         var g = grupos.get(clave);
-        g.unidades += fila[COL.unidades];
+        g.cantidadTotalFacturada += fila[COL.cantidadTotalFacturada] || 0;
         g.valor += fila[COL.valor];
     });
 
     var puntos = [];
     grupos.forEach(function (g, clave) {
-        if (g.unidades <= 0) return;
-        var precioPromedio = g.valor / g.unidades;
-        var precioEstandarizado = precioPromedio / entrada.cantidad_total_presentacion;
+        if (g.cantidadTotalFacturada <= 0) return;
+        var precioEstandarizado = g.valor / g.cantidadTotalFacturada;
         puntos.push({ anio: g.anio, mes: g.mes, clave: clave, precio: precioEstandarizado });
     });
     return puntos.sort(function (a, b) { return a.clave - b.clave; });
+}
+
+// Precio promedio estandarizado de un conjunto de líneas de factura (una marca,
+// varias marcas de un mismo principio activo, etc.): suma de valor sobre suma de
+// cantidad_total_facturada — nunca el promedio de precios ya divididos.
+function precioPromedioEstandar(filas) {
+    var valor = 0, cantidad = 0;
+    filas.forEach(function (fila) {
+        var ctf = fila[COL.cantidadTotalFacturada];
+        if (!ctf || ctf <= 0) return;
+        valor += fila[COL.valor];
+        cantidad += ctf;
+    });
+    if (cantidad <= 0) return null;
+    return { precio: valor / cantidad, valorTotal: valor, cantidadTotal: cantidad };
 }
 
 function cargarSeleccion(valores) {
@@ -445,6 +481,7 @@ function recalcularYRenderizar() {
     if (!series.length) {
         $('#panel-resultados').addClass('d-none');
         $('#panel-histograma').addClass('d-none');
+        $('#panel-kpis').addClass('d-none');
         $('#panel-mensaje').removeClass('d-none').text(t('sinDatosSeleccion'));
         return;
     }
@@ -452,6 +489,7 @@ function recalcularYRenderizar() {
     $('#panel-resultados').removeClass('d-none');
 
     renderChart(series);
+    renderKpis();
     renderTabla(series);
     renderHistograma(series);
 }
@@ -576,6 +614,117 @@ function renderTabla(series) {
         trVacio.appendChild(tdVacio);
         $tbody.append(trVacio);
     }
+}
+
+// --- KPIs ANIO_REFERENCIA vs. año anterior -----------------------------------------
+// Suma valor y cantidad_total_facturada línea a línea (sin pasar por la agregación
+// mensual de serieEstandarizada) sobre TODAS las marcas/presentaciones actualmente
+// seleccionadas y filtradas — el precio promedio y los percentiles resultantes son
+// los de ese conjunto combinado, no el promedio de los precios ya divididos de
+// cada marca.
+
+function filasDeAnio(anio) {
+    var filas = [];
+    seleccionActual.forEach(function (entrada) {
+        var clave = entrada.no_expediente + '|' + entrada.consecutivo;
+        var filtradas = aplicarFiltros(filasPorEntrada.get(clave) || []);
+        filtradas.forEach(function (fila) {
+            if (fila[COL.anio] === anio) filas.push(fila);
+        });
+    });
+    return filas;
+}
+
+function resumenAnio(anio) {
+    var filas = filasDeAnio(anio);
+    var totales = precioPromedioEstandar(filas);
+
+    var precios = [];
+    filas.forEach(function (fila) {
+        var ctf = fila[COL.cantidadTotalFacturada];
+        if (!ctf || ctf <= 0) return;
+        precios.push(fila[COL.valor] / ctf);
+    });
+    precios.sort(function (a, b) { return a - b; });
+
+    return {
+        cantidadTotal: totales ? totales.cantidadTotal : 0,
+        valorTotal: totales ? totales.valorTotal : 0,
+        precioPromedio: totales ? totales.precio : null,
+        p25: percentil(precios, 25),
+        p75: percentil(precios, 75)
+    };
+}
+
+function variacionPctKpi(actual, previo) {
+    if (actual === null || actual === undefined || !previo) return null;
+    return (actual - previo) / previo * 100;
+}
+
+// semantica 'precio': subir es rojo (up-bad), bajar es verde (down-good), igual que
+// la columna "Variación" de la tabla de resumen. semantica 'neutral': un cambio en
+// volumen/dispersión no es en sí mismo bueno o malo, así que no se colorea.
+function kpiTile(label, valorTexto, deltaPct, semantica) {
+    var div = document.createElement('div');
+    div.className = 'kpi-tile';
+
+    var lbl = document.createElement('div');
+    lbl.className = 'kpi-label';
+    lbl.textContent = label;
+    div.appendChild(lbl);
+
+    var val = document.createElement('div');
+    val.className = 'kpi-value';
+    val.textContent = valorTexto;
+    div.appendChild(val);
+
+    var delta = document.createElement('div');
+    if (deltaPct === null) {
+        delta.className = 'kpi-delta neutral';
+        delta.textContent = t('kpiSin2024');
+    } else {
+        var claseColor = 'neutral';
+        if (semantica === 'precio') claseColor = deltaPct > 0 ? 'up-bad' : (deltaPct < 0 ? 'down-good' : 'neutral');
+        delta.className = 'kpi-delta ' + claseColor;
+        delta.textContent = formatoPct(deltaPct) + ' ' + t('kpiVs2024');
+    }
+    div.appendChild(delta);
+
+    return div;
+}
+
+function renderKpis() {
+    var actual = resumenAnio(ANIO_REFERENCIA);
+    if (actual.cantidadTotal <= 0) {
+        $('#panel-kpis').addClass('d-none');
+        return;
+    }
+    var previo = resumenAnio(ANIO_REFERENCIA - 1);
+    var unidad = seleccionActual.length ? seleccionActual[0].unidad_dosis : '';
+
+    var dispersionActual = (actual.precioPromedio && actual.p25 !== null && actual.p75 !== null)
+        ? (actual.p75 - actual.p25) / actual.precioPromedio * 100
+        : null;
+    var dispersionPrevia = (previo.precioPromedio && previo.p25 !== null && previo.p75 !== null)
+        ? (previo.p75 - previo.p25) / previo.precioPromedio * 100
+        : null;
+
+    var $grid = $('#kpi-grid');
+    $grid.empty();
+    $grid.append(kpiTile(t('kpiCantidad'), formatoCompacto(actual.cantidadTotal) + ' ' + unidad,
+        variacionPctKpi(actual.cantidadTotal, previo.cantidadTotal), 'neutral'));
+    $grid.append(kpiTile(t('kpiValor'), '$ ' + formatoCompacto(actual.valorTotal),
+        variacionPctKpi(actual.valorTotal, previo.valorTotal), 'neutral'));
+    $grid.append(kpiTile(t('kpiPrecioPromedio'), formatoPesosDecimal(actual.precioPromedio) + '/' + unidad,
+        variacionPctKpi(actual.precioPromedio, previo.precioPromedio), 'precio'));
+    $grid.append(kpiTile(t('kpiP25'), formatoPesosDecimal(actual.p25) + '/' + unidad,
+        variacionPctKpi(actual.p25, previo.p25), 'precio'));
+    $grid.append(kpiTile(t('kpiP75'), formatoPesosDecimal(actual.p75) + '/' + unidad,
+        variacionPctKpi(actual.p75, previo.p75), 'precio'));
+    $grid.append(kpiTile(t('kpiDispersion'), dispersionActual === null ? '—' : dispersionActual.toFixed(1) + '%',
+        variacionPctKpi(dispersionActual, dispersionPrevia), 'neutral'));
+
+    $('#panel-kpis').removeClass('d-none');
 }
 
 // --- Histograma de precios (ANIO_REFERENCIA) --------------------------------------
@@ -731,6 +880,23 @@ function formatoPesosDecimal(valor) {
     var num = Number(valor);
     if (isNaN(num)) return '—';
     return '$ ' + num.toLocaleString('es-CO', { maximumFractionDigits: 2 });
+}
+
+// Formato compacto (1,5 M / 11,4 MM) para valores agregados grandes de los KPIs
+// (cantidad total, valor total) — un número completo con separadores de miles
+// (ej. "11.386.977.697,9") no tiene puntos de corte para el navegador y desborda
+// el tile en vez de ajustarse.
+function formatoCompacto(valor) {
+    if (valor === null || valor === undefined) return '—';
+    var num = Number(valor);
+    if (isNaN(num)) return '—';
+    var abs = Math.abs(num);
+    var div = 1, sufijo = '';
+    if (abs >= 1e12) { div = 1e12; sufijo = ' B'; }
+    else if (abs >= 1e9) { div = 1e9; sufijo = ' MM'; }
+    else if (abs >= 1e6) { div = 1e6; sufijo = ' M'; }
+    else if (abs >= 1e3) { div = 1e3; sufijo = ' mil'; }
+    return (num / div).toLocaleString('es-CO', { maximumFractionDigits: 1 }) + sufijo;
 }
 
 function formatoNumero(valor) {

@@ -167,6 +167,8 @@
   "demos.comparativo.page.filtro.unidadNota": "El precio estandarizado siempre se calcula sobre la unidad de factura \"Presentación comercial\" (la caja/kit completo); es la única base compatible con el contenido total usado para estandarizar.",
   "demos.comparativo.page.chart.titulo": "Precio estandarizado en el tiempo",
   "demos.comparativo.page.chart.sub": "Mensual desde octubre de 2019; trimestral antes de esa fecha.",
+  "demos.comparativo.page.kpi.titulo": "KPIs 2025 vs. 2024 — selección actual",
+  "demos.comparativo.page.kpi.sub": "Suma de valor y cantidad_total_facturada de las marcas/presentaciones seleccionadas arriba (tras los filtros); no de todo el principio activo si la selección es parcial.",
   "demos.comparativo.page.tabla.titulo": "Resumen por marca / presentación",
   "demos.comparativo.page.tabla.col.marca": "Marca / presentación",
   "demos.comparativo.page.tabla.col.unidad": "Unidad",

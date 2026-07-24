@@ -25,7 +25,7 @@
   <style>
     .demo-shell { padding: 2.5rem 0 3rem; }
     .container-demo {
-      max-width: var(--max-width);
+      max-width: 1120px;
       margin: 0 auto;
       padding: 0 1.25rem;
     }
@@ -36,26 +36,26 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      color: var(--color-accent);
+      color: var(--brand);
       margin-bottom: 0.5rem;
     }
-    .demo-header p { color: var(--color-text-muted); }
+    .demo-header p { color: var(--text-muted); }
     .card-surface {
-      background: var(--color-bg);
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius);
+      background: var(--surface-1);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
       padding: 1rem 1.25rem;
     }
-    .chart-card h5 { color: var(--color-navy); }
-    .chart-sub { font-size: 0.8rem; color: var(--color-text-muted); margin-bottom: 0.5rem; }
+    .chart-card h5 { color: var(--text-primary); }
+    .chart-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem; }
     #tabla-comparativo th, #tabla-comparativo td { font-variant-numeric: tabular-nums; }
-    #panel-mensaje, #panel-carga { color: var(--color-text-muted); }
+    #panel-mensaje, #panel-carga { color: var(--text-muted); }
     .demo-note {
       font-size: 0.9rem;
-      color: var(--color-text-muted);
-      background: var(--color-bg-alt);
-      border: 1px dashed var(--color-border);
-      border-radius: var(--radius);
+      color: var(--text-muted);
+      background: var(--surface-1);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
       padding: 0.75rem 1rem;
       margin-bottom: 1.5rem;
     }
@@ -67,8 +67,33 @@
       margin-right: 6px;
       vertical-align: middle;
     }
-    .up-bad { color: var(--color-status-critical); }
-    .down-good { color: var(--color-status-good); }
+    .up-bad { color: var(--status-critical); }
+    .down-good { color: var(--status-good); }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.75rem;
+    }
+    .kpi-tile {
+      background: var(--page-plane);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 0.9rem;
+    }
+    .kpi-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .kpi-value {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.15;
+      overflow-wrap: break-word;
+    }
+    .kpi-delta { font-size: 0.82rem; margin-top: 0.3rem; }
+    .kpi-delta.neutral { color: var(--text-muted); }
     .demo-back { margin-top: 2rem; }
   </style>
 </head>
@@ -149,6 +174,12 @@
           <h5 data-i18n="demos.comparativo.page.chart.titulo">Precio estandarizado en el tiempo</h5>
           <div class="chart-sub" data-i18n="demos.comparativo.page.chart.sub">Mensual, desde octubre de 2019.</div>
           <canvas id="chart-comparativo" height="110"></canvas>
+        </div>
+
+        <div id="panel-kpis" class="card-surface chart-card mb-4 d-none">
+          <h5 data-i18n="demos.comparativo.page.kpi.titulo">KPIs 2025 vs. 2024 — selección actual</h5>
+          <div class="chart-sub" data-i18n="demos.comparativo.page.kpi.sub">Suma de valor y cantidad_total_facturada de las marcas/presentaciones seleccionadas arriba (tras los filtros); no de todo el principio activo si la selección es parcial.</div>
+          <div class="kpi-grid" id="kpi-grid"></div>
         </div>
 
         <div class="card-surface chart-card mb-4">
